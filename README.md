@@ -12,6 +12,18 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 
 ---
 
+
+### ⚠️ This is a beta version for testing!
+
+The program is under active development, so your Linux system may display an "Unknown file type" warning. This is normal for beta testing.
+
+**To launch the terminal:**
+1. Right-click the file -> *Properties* -> *Permissions*.
+2. Check the box *"Allow executing file as program"*.
+
+
+---
+
 ##  Launch
 
 Open the file. Type `help` for a list of commands.
