@@ -5,20 +5,20 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 
 ---
 
-## 📥 Download
+##  Download
 
 - **Windows** — `LemonTerminal.exe`
 - **Linux** — `LemonTerminal`
 
 ---
 
-## 🚀 Launch
+##  Launch
 
 Open the file. Type `help` for a list of commands.
 
 ---
 
-## 👨‍💻 For Developers
+##  For Developers
 
 ```bash
 python3 lemon.py
