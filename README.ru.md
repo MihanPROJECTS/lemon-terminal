@@ -7,7 +7,8 @@ Lemon Terminal — это простой и понятный терминал, �
 
 
 ![Static Badge](https://img.shields.io/badge/Language-Python%203-yellow)
-   ![Static Badge](https://img.shields.io/badge/Status-Beta%20Testing-orange)   ![Static Badge](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows-blue)   ![Static Badge](https://img.shields.io/badge/License-MIT-green)
+   ![Static Badge](https://img.shields.io/badge/Status-Beta%20Testing-orange)   ![Static Badge](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows-blue)   [![Static Badge](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
 
 
 
