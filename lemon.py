@@ -66,7 +66,7 @@ def run_gui():
         output.configure(state="disabled")
         output.see(tk.END)
 
-    insert_output("🍋 Lemon Terminal v1.0\n")
+    insert_output("🍋 Lemon Terminal v1.0 Beta\n")
     insert_output("Type 'help' for a list of commands.\n")
     insert_output("To type, click on the blue bar.\n\n")
     insert_output("-> ")
