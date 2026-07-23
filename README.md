@@ -9,8 +9,8 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 
 
 
+![Lemon Terminal Demo](demo.gif)
 
-<img width="800" height="500" alt="qwertyu" src="https://github.com/user-attachments/assets/e4efa53a-8d89-42e2-814e-59c22330b6a9" /> 
 
 
 
