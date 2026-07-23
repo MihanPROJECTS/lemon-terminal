@@ -36,6 +36,66 @@ Open the file. Type `help` for a list of commands.
 
 ---
 
+---
+
+##  Available Commands
+
+You can use the following built-in commands to manage your system, files, and terminal appearance.
+
+###  SYSTEM
+* **`sysinfo`** — Show detailed hardware characteristics of the PC.
+* **`memory`** — Display current RAM status.
+* **`cpu`** — Show processor model and current CPU load.
+* **`disk`** — Check available disk storage space.
+* **`ip`** — Display the current IP address of your device.
+
+---
+
+###  FILES
+* **`ls`** — List all files and folders in the current directory.
+* **`cd`** — Navigate to a different folder.
+* **`mkdir`** — Create a new folder.
+* **`rmdir`** — Delete an empty folder.
+* **`touch`** — Create an empty file.
+* **`cat`** — Read and display the contents of a text file.
+* **`echo`** — Print the entered text on the screen.
+* **`writefile`** — Write text directly into a file.
+
+>  **WARNING! DANGEROUS COMMAND!**
+> * **`rm`** / **`-rf`** — Permanent and forced deletion of files or folders along with all their contents. Use with extreme caution; deleted data cannot be recovered!
+
+---
+
+###  THEMES
+* **`fullscreen`** — Toggle full-screen mode for the terminal window.
+* **`font size`** — Change the interface font size.
+* **`theme <classic>`** — Enable the standard black-and-blue theme.
+* **`theme <lemon>`** — Enable the lemon-yellow theme.
+* **`theme <forest>`** — Enable the green forest theme.
+* **`theme <night>`** — Enable the dark night theme.
+* **`theme <light>`** — Enable the clean light theme.
+
+---
+
+###  TOOLS
+* **`date`** — Display the current date.
+* **`calc`** — Launch the built-in math calculator.
+* **`random 3`** — Generate a random number from 1 to 3.
+* **`random 10`** — Generate a random number from 1 to 10.
+* **`random 100`** — Generate a random number from 1 to 100.
+
+---
+
+###  TERMINAL
+* **`ver`** — Show the current version of Lemon Terminal.
+* **`clear`** — Wipe the console screen completely.
+* **`exit`** — Close the application and exit the terminal.
+* **`help`** — Display the general list of all available command categories.
+* **`help <directory>`** — Show help documentation for a specific category (e.g., `help files`).
+
+
+---
+
 ##  For Developers
 
 ```bash
