@@ -42,7 +42,6 @@ Open the file. Type `help` for a list of commands.
 
 ---
 
----
 
 ##  Available Commands
 
