@@ -4,7 +4,13 @@
 # lemon-terminal / Лимон Терминал
 Lemon Terminal is a simple, straightforward terminal designed for those just starting to learn the command line. When I first started using a computer, I didn't understand how CMD and terminals worked. This project is my attempt to make the learning process easier and more engaging.
 
-<img width="800" height="500" alt="qwertyu" src="https://github.com/user-attachments/assets/e4efa53a-8d89-42e2-814e-59c22330b6a9" />
+![Static Badge](https://img.shields.io/badge/Language-Python%203-yellow)
+   ![Static Badge](https://img.shields.io/badge/Status-Beta%20Testing-orange)   ![Static Badge](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows-blue)   ![Static Badge](https://img.shields.io/badge/License-MIT-green)
+
+
+
+
+<img width="800" height="500" alt="qwertyu" src="https://github.com/user-attachments/assets/e4efa53a-8d89-42e2-814e-59c22330b6a9" /> 
 
 
 
