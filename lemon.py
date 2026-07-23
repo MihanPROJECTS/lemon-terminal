@@ -144,20 +144,27 @@ def run_gui():
                 insert_output(f"  {key}  - {value['desc']}\n")
             insert_output("─" * 40 + "\n")
             insert_output("Type 'help <category>' for detailed commands\n")
-            insert_output("  Example: help system\n")
-
-        elif command.startswith("help "):
-            category = command[5:].strip().lower()
-            if category in help_data:
-                data = help_data[category]
-                insert_output(f"📚 {category.upper()} - {data['desc']}:\n")
-                insert_output("─" * 40 + "\n")
-                for cmd in data['commands']:
-                    insert_output(f"  {cmd}\n")
-                insert_output("─" * 40 + "\n")
-            else:
-                insert_output(f"❌ Category '{category}' not found.\n")
-                insert_output("Available: system, files, themes, tools, terminal\n")
+            insert_output("  Example: help system\n")                           
+    #    if " && " in command:
+     #       commands = command.split(" && ")         
+     #       for cmd in commands:
+      #          cmd = cmd.strip()             У этой команды беды с выполнением. Лучше использовать run.
+    #            insert_output(f"➜ {cmd}\n")
+      #          try:
+         #           import subprocess
+             #       result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+           #         if result.stdout:
+            #            insert_output(result.stdout)
+           #         if result.stderr:
+           #             insert_output("⚠️ " + result.stderr)
+          #          if result.returncode != 0:
+           #             insert_output(f"❌ Command failed: {cmd}\n")
+           #             return
+          #      except Exception as e:
+           #         insert_output(f"❌ Error: {e}\n")
+           #         return
+           #insert_output("✅ All commands executed\n")
+            #return
 
         elif command == "ver":
             ver_text = """
@@ -165,7 +172,6 @@ def run_gui():
 │                                                     │
 │                   Lemon Terminal                    │
 │  Thanks for downlanding!                            │
-│  Version:     Beta 1.0                              │
 │  Author:      m1hail                                │
 │  License:     Open Source                           │
 │  Language:    Python 3 + tkinter                    │
@@ -184,6 +190,25 @@ def run_gui():
 └─────────────────────────────────────────────────────┘
 """
             insert_output(ver_text)
+
+        elif command.startswith("run "):
+            cmd = command[4:].strip()
+            try:
+                import subprocess
+                process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                stdout, stderr = process.communicate()
+                if stdout:
+                    insert_output(stdout)
+                if stderr:
+                    insert_output("⚠️ " + stderr)
+                if process.returncode != 0:
+                    insert_output(f"❌ Command failed (exit code: {process.returncode})\n")
+                else:
+                    insert_output(f"✅ Command finished (exit code: {process.returncode})\n")
+            except FileNotFoundError:
+                insert_output(f"❌ Command not found: {cmd}\n")
+            except Exception as e:
+                insert_output(f"❌ Error: {e}\n")
         elif command == "date":
             insert_output(datetime.now().strftime("%d %B %Y") + "\n")
         elif command == "theme":
@@ -425,7 +450,7 @@ def run_gui():
             output.configure(bg="black", fg="#F7DC6F")        # лимончики
             entry.configure(bg="#F7DC6F", fg="black")        # лимонный ввод
             insert_output("Theme set to: LEMON\n")
-        #elif command == "rgbm":
+        #elif command == "rgbm":                        Это РГБ мод, где вся строка переливается цветами.
         #    if rgb_active:
         #        
         #        rgb_active = False
