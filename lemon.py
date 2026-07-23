@@ -196,6 +196,8 @@ def run_gui():
             insert_output("  forest     - Green theme")
             #insert_output("  rgbm       - Rainbow input bar\n") ргб мод слишком вырвиглазный, для серьезной программы
             insert_output("─" * 40 + "\n")
+        elif command.startswith("calc "):
+            expression = command[5:].strip()
             try:
                 #ЛУЧШЕ НЕ МЕНЯЙТЕ ДАННЫЙ НАБОР ЗНАКОВ ДЛЯ КАЛЬКУЛЯТОРА, ЭТО ЗАЩИТА, ВЕДЬ ДАННАЯ ФУНКЦИЯ МОЖЕТ ВЫПОЛНЯТЬ ЛЮБОЙ КОД!
                 allowed = "0123456789+-*/().% "
