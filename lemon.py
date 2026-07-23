@@ -161,7 +161,6 @@ def run_gui():
 
         elif command == "ver":
             ver_text = """
-            insert_output(ver_text)
 ┌─────────────────────────────────────────────────────┐
 │                                                     │
 │                   Lemon Terminal                    │
