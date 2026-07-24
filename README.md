@@ -5,8 +5,8 @@
 Lemon Terminal is a simple, straightforward terminal designed for those just starting to learn the command line. When I first started using a computer, I didn't understand how CMD and terminals worked. This project is my attempt to make the learning process easier and more engaging.
 
 🌐 **Разные языки / Other Languages:** [English](README.md) • [Русский](README.ru.md)
+ 
 
-[Скачать Lemon Terminal](https://github.com)
 
 
 
@@ -25,6 +25,8 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 ---
 
 ##  Download
+
+**[Download Lemon Terminal (Releases page)](https://github.com/MihanPROJECTS/lemon-terminal/releases)**
 
 - **Windows** — `LemonTerminal.exe` 	*Unstable version*
 - **Linux** — `LemonTerminal`
