@@ -6,6 +6,9 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 
 🌐 **Разные языки / Other Languages:** [English](README.md) • [Русский](README.ru.md)
 
+[Скачать Lemon Terminal](https://github.com)
+
+
 
 ![Static Badge](https://img.shields.io/badge/Language-Python%203-yellow)
    ![Static Badge](https://img.shields.io/badge/Status-Beta%20Testing-orange)   ![Static Badge](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows-blue)   [![Static Badge](https://img.shields.io/badge/License-MIT-green)](LICENSE)
