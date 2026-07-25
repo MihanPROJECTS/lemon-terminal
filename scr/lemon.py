@@ -5,7 +5,10 @@ import platform
 import tkinter as tk
 import psutil
 import time
-#Hello developer. Привет разработчик. Оригинальный автор, M1hail.
+#Hello developer. Привет разработчик. Оригинальный автор, M1hail. команда сборки виндовс pyinstaller --onefile --windowed --icon=icon.ico lemon.py
+def get_prompt():
+    return "&\\"
+
 font_index = -1
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FONTOS_DIR = os.path.join(BASE_DIR, "fontos")
@@ -21,7 +24,7 @@ help_data = {
         ]
     },
     "files": {
-        "desc": "File management (coming soon)",
+        "desc": "File management",
         "commands": ["ls", "cd", "mkdir", "rmdir", "touch", "rmrf", "cat", "echo", "writefile"]
     },
     "themes": {
@@ -59,6 +62,7 @@ def run_gui():
     output = tk.Text(window, bg="black", fg="white", font=("Courier", 12))
     output.pack(fill="both", expand=True, padx=5, pady=5)
     output.configure(state="disabled")
+    output.tag_configure("green", foreground="#73d65a")
 
     def insert_output(text):
         output.configure(state="normal")
@@ -66,10 +70,19 @@ def run_gui():
         output.configure(state="disabled")
         output.see(tk.END)
 
-    insert_output("🍋 Lemon Terminal v1.0 Beta\n")
-    insert_output("Type 'help' for a list of commands.\n")
+    def insert_output(text, tag=None):
+        output.configure(state="normal")
+        if tag:
+            output.insert(tk.END, text, tag)
+        else:
+            output.insert(tk.END, text)
+        output.configure(state="disabled")
+        output.see(tk.END)
+
+    insert_output("🍋 Lemon Terminal v1.2 beta\n")
+    insert_output("Type 'help' for a categories of commands.\n")
     insert_output("To type, click on the blue bar.\n\n")
-    insert_output("-> ")
+    insert_output(get_prompt(), "green")
 
     entry = tk.Entry(window, bg="#0000AA", fg="white", font=("Courier", 12))
     entry.pack(fill="x", padx=5, pady=(0, 5))
@@ -138,7 +151,7 @@ def run_gui():
 
         if command == "help":
             # Категории хэлп
-            insert_output("📚 HELP - Available categories:\n")
+            insert_output(" HELP - Available categories:\n")
             insert_output("─" * 40 + "\n")
             for key, value in help_data.items():
                 insert_output(f"  {key}  - {value['desc']}\n")
@@ -156,38 +169,30 @@ def run_gui():
            #         if result.stdout:
             #            insert_output(result.stdout)
            #         if result.stderr:
-           #             insert_output("⚠️ " + result.stderr)
+           #             insert_output(" " + result.stderr)
           #          if result.returncode != 0:
-           #             insert_output(f"❌ Command failed: {cmd}\n")
+           #             insert_output(f" Command failed: {cmd}\n")
            #             return
           #      except Exception as e:
-           #         insert_output(f"❌ Error: {e}\n")
+           #         insert_output(f" Error: {e}\n")
            #         return
-           #insert_output("✅ All commands executed\n")
+           #insert_output(" All commands executed\n")
             #return
 
         elif command == "ver":
             ver_text = """
-┌─────────────────────────────────────────────────────┐
-│                                                     │
-│                   Lemon Terminal                    │
-│  Thanks for downlanding!                            │
-│  Author:      m1hail                                │
-│  License:     Open Source                           │
-│  Language:    Python 3 + tkinter                    │
-│                                                     │
-│  ─── Features ───                                   │
-│  • Custom GUI terminal                              │
-│  • BIOS-style interface                             │
-│  • 20+ built-in commands                            │
-│  • ASCII art support                                │
-│  • Many themes                                      │
-│                                                     │
-│  ─── Commands ───                                   │
-│  Type 'help' for a categories                       │
-│                                                     │
-│                                                     │
-└─────────────────────────────────────────────────────┘
+                                                            
+     __                         _____               _         _ 
+    |  |   ___ _____ ___ ___   |_   _|___ ___ _____|_|___ ___| |
+    |  |__| -_|     | . |   |    | | | -_|  _|     | |   | .'| |
+    |_____|___|_|_|_|___|_|_|    |_| |___|_| |_|_|_|_|_|_|__,|_|
+        
+    - made by M1hail
+    - 20+ commands
+    - theme support
+    - run scripts
+    - write 'help'
+                                                            
 """
             insert_output(ver_text)
 
@@ -202,13 +207,13 @@ def run_gui():
                 if stderr:
                     insert_output("⚠️ " + stderr)
                 if process.returncode != 0:
-                    insert_output(f"❌ Command failed (exit code: {process.returncode})\n")
+                    insert_output(f" Command failed (exit code: {process.returncode})\n")
                 else:
-                    insert_output(f"✅ Command finished (exit code: {process.returncode})\n")
+                    insert_output(f" Command finished (exit code: {process.returncode})\n")
             except FileNotFoundError:
-                insert_output(f"❌ Command not found: {cmd}\n")
+                insert_output(f" Command not found: {cmd}\n")
             except Exception as e:
-                insert_output(f"❌ Error: {e}\n")
+                insert_output(f" Error: {e}\n")
         elif command == "date":
             insert_output(datetime.now().strftime("%d %B %Y") + "\n")
         elif command == "theme":
@@ -243,16 +248,21 @@ def run_gui():
                 insert_output("Fullscreen: OFF\n")
             else:
                 insert_output("Fullscreen: ON\n")
+
+        elif command == "extra help":
+            insert_output("This is a fallback version of the help command, without the full directories.")
+            insert_output("Commands: clear, exit, sysinfo, calc, date, theme < directory >")
+
                 # Дальше идут команды файловые
 
         elif command == "ls":
             try:
                 files = os.listdir(".")
-                insert_output("📁 Files:\n")
+                insert_output(" Files:\n")
                 for f in files:
                     insert_output(f"  {f}\n")
             except Exception as e:
-                insert_output(f"❌ Error: {e}\n")
+                insert_output(f" Error: {e}\n")
         elif command == "ip":
             try:
                 import socket
@@ -261,7 +271,7 @@ def run_gui():
                 insert_output(f" Hostname: {hostname}\n")
                 insert_output(f" IP Address: {ip}\n")
             except Exception as e:
-                insert_output(f"❌ Error: {e}\n")
+                insert_output(f" Error: {e}\n")
         elif command.startswith("cat "):
             name = command[4:].strip()
             try:
@@ -269,9 +279,9 @@ def run_gui():
                     content = f.read()
                     insert_output(content + "\n")
             except FileNotFoundError:
-                insert_output(f"❌ File not found: {name}\n")
+                insert_output(f" File not found: {name}\n")
             except Exception as e:
-                insert_output(f"❌ Error: {e}\n")
+                insert_output(f" Error: {e}\n")
         elif command == "cd":
             insert_output(os.getcwd() + "\n")
         elif command.startswith("rmrf "):
@@ -279,35 +289,35 @@ def run_gui():
             import shutil
             try:
                 shutil.rmtree(name)
-                insert_output(f"🗑 Removed: {name}\n")
+                insert_output(f" Removed: {name}\n")
             except FileNotFoundError:
-                insert_output(f"❌ Not found: {name}\n")
+                insert_output(f" Not found: {name}\n")
             except Exception as e:
-                insert_output(f"❌ Error: {e}\n")
+                insert_output(f" Error: {e}\n")
         elif command.startswith("rmdir "):
             name = command[6:].strip()
             try:
                 os.rmdir(name)
-                insert_output(f"🗑 Directory deleted: {name}\n")
+                insert_output(f" Directory deleted: {name}\n")
             except FileNotFoundError:
-                insert_output(f"❌ Folder not found: {name}\n")
+                insert_output(f" Folder not found: {name}\n")
             except OSError:
-                insert_output(f"❌ Folder not empty: {name}\n")
+                insert_output(f" Folder not empty: {name}\n")
             except Exception as e:
-                insert_output(f"❌ Error: {e}\n")
+                insert_output(f" Error: {e}\n")
 
         elif command.startswith("cd "):
             path = command[3:].strip()
             if path == "":
-                insert_output("❌ Usage: cd <path>\n")
+                insert_output(" Usage: cd <path>\n")
             else:
                 try:
                     os.chdir(path)
                     insert_output(f" Changed to: {os.getcwd()}\n")
                 except FileNotFoundError:
-                    insert_output(f"❌ Folder not found: {path}\n")
+                    insert_output(f" Folder not found: {path}\n")
                 except Exception as e:
-                    insert_output(f"❌ Error: {e}\n")
+                    insert_output(f" Error: {e}\n")
 
         elif command.startswith("mkdir "):
             name = command[6:].strip()
@@ -315,11 +325,11 @@ def run_gui():
                 os.mkdir(name)
                 insert_output(f" Created: {name}\n")
             except Exception as e:
-                insert_output(f"❌ Error: {e}\n")
+                insert_output(f" Error: {e}\n")
         elif command.startswith("writefile "):
             parts = command[10:].split(" ", 1)
             if len(parts) < 2:
-                insert_output("❌ Usage: writefile <filename> <text>\n")
+                insert_output(" Usage: writefile <filename> <text>\n")
             else:
                 filename = parts[0]
                 text = parts[1]
@@ -328,7 +338,7 @@ def run_gui():
                         f.write(text)
                     insert_output(f" Written to {filename}\n")
                 except Exception as e:
-                    insert_output(f"❌ Error: {e}\n")
+                    insert_output(f" Error: {e}\n")
 
         elif command.startswith("touch "):
             name = command[6:].strip()
@@ -337,7 +347,7 @@ def run_gui():
                     pass
                 insert_output(f" Created: {name}\n")
             except Exception as e:
-                insert_output(f"❌ Error: {e}\n")
+                insert_output(f" Error: {e}\n")
         elif command == "disk":
             import shutil
             disk = shutil.disk_usage("/")
@@ -358,12 +368,13 @@ def run_gui():
             free = mem.free // (1024**3)
             percent = mem.percent
             insert_output(f"RAM: {used}GB / {total}GB ({percent}% used)\n")
+                                                                                                #     ВНИЗУ КОМАНДА CLEAR
         elif command == "clear":
             output.configure(state="normal")
             output.delete(1.0, tk.END)
             output.configure(state="disabled")
-            insert_output("🍋 Lemon Terminal v1.0\n")
-            insert_output("Type 'help' for a categories of commands.\n")
+            insert_output("🍋 Lemon Terminal v1.2 beta\n")
+            insert_output("Type 'help' for a categories of commands.\n")  
             insert_output("To type, click on the blue bar.\n\n")
         elif command.startswith("echo "):
             text = command[5:]
@@ -468,7 +479,7 @@ def run_gui():
         else:
             insert_output("ERROR: such a command does not exist!\n")
 
-        insert_output("-> ")
+        insert_output(get_prompt(), "green")
 
     entry.bind("<Return>", handle_command)
 
