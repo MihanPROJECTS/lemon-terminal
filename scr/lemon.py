@@ -404,6 +404,16 @@ def run_gui():
                 insert_output("Usage: font size <number> (8-50)\n")
         elif command.startswith("help "):
             category = command[5:].strip().lower()
+            if category in help_data:
+                data = help_data[category]
+                insert_output(f" {category.upper()} - {data['desc']}:\n")
+                insert_output("─" * 40 + "\n")
+                for cmd in data['commands']:
+                    insert_output(f"  {cmd}\n")
+                insert_output("─" * 40 + "\n")
+            else:
+                insert_output(f" Category '{category}' not found.\n")
+                insert_output("Available: system, files, themes, tools, terminal\n")
     
         elif command == "exit":
             window.destroy()
