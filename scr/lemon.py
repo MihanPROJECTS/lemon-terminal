@@ -2,12 +2,17 @@ import os
 import random
 from datetime import datetime
 import platform
-import tkinter as tk
 import psutil
 import time
-#Hello developer. Привет разработчик. Оригинальный автор, M1hail. команда сборки виндовс pyinstaller --onefile --windowed --icon=icon.ico lemon.py
+import customtkinter as ctk
+from PIL import Image
+
+ctk.set_appearance_mode("dark")  
+ctk.set_default_color_theme("blue")                     
+
 def get_prompt():
     return "&\\"
+
 
 font_index = -1
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -18,10 +23,7 @@ custom_image_path = ""
 help_data = {
     "system": {
         "desc": "System commands",
-        "commands": [
-            "sysinfo", "memory", "cpu", "disk", "ip"
-        
-        ]
+        "commands": ["sysinfo", "memory", "cpu", "disk", "ip"]
     },
     "files": {
         "desc": "File management",
@@ -29,12 +31,8 @@ help_data = {
     },
     "themes": {
         "desc": "Themes and customization",
-        "commands": [
-            "theme <name>",
-            "font size <number>", "fullscreen"
-        ]
+        "commands": ["theme <name>", "font size <number>", "fullscreen"]
     },
-    #"games": { Должны были быть игры, но это в будущем будет. Также я планирую добавить очень классную вещь в программу, но это пока секрет, или вы можете найти упомининия новой команды, если я недоконца зачистил код. Извиняюсь за ошибочную орфографию, если есть.
     "tools": {
         "desc": "Tools",
         "commands": ["date", "calc", "random 3", "random 10", "random 100"]
@@ -46,65 +44,63 @@ help_data = {
 }
 
 def run_gui():
-    window = tk.Tk()
+    window = ctk.CTk()
     window.title("Lemon Terminal")
+    window.configure(fg_color="#1a1a1a")
     window.geometry("800x500")
-    window.configure(bg="black")
     window.minsize(400, 460)
-    #window.resizable(False, False) Эта строка нужна была, чтобы запретить менять размер терминала, но это на первых днях создания проекта было нужно, уже - нет.
 
     def toggle_fullscreen(event=None):
         state = window.attributes('-fullscreen')
         window.attributes('-fullscreen', not state)
 
     window.bind("<F11>", toggle_fullscreen)
-
-    output = tk.Text(window, bg="black", fg="white", font=("Courier", 12))
-    output.pack(fill="both", expand=True, padx=5, pady=5)
+    output = ctk.CTkTextbox(
+        window, 
+        font=("monospace", 14), 
+        activate_scrollbars=True,
+        corner_radius=1,        
+        fg_color="#1a1a1a"       
+    )
+    output.pack(fill="both", expand=True, padx=10, pady=10)
     output.configure(state="disabled")
-    output.tag_configure("green", foreground="#73d65a")
 
-    def insert_output(text):
-        output.configure(state="normal")
-        output.insert(tk.END, text)
-        output.configure(state="disabled")
-        output.see(tk.END)
+    
+    output.tag_config("green", foreground="#73d65a")
+    output.tag_config("gray_hint", foreground="#757575")
+
 
     def insert_output(text, tag=None):
         output.configure(state="normal")
         if tag:
-            output.insert(tk.END, text, tag)
+            output.insert("end", text, tag) 
         else:
-            output.insert(tk.END, text)
+            output.insert("end", text)
         output.configure(state="disabled")
-        output.see(tk.END)
-
-    insert_output("🍋 Lemon Terminal v1.2 beta\n")
+        output.see("end")
+    insert_output("Lemon Terminal v1.3 beta\n")
     insert_output("Type 'help' for a categories of commands.\n")
-    insert_output("To type, click on the blue bar.\n\n")
+    insert_output("|To type, click on the blue bar.\n\n", "gray_hint")
     insert_output(get_prompt(), "green")
 
-    entry = tk.Entry(window, bg="#0000AA", fg="white", font=("Courier", 12))
-    entry.pack(fill="x", padx=5, pady=(0, 5))
+    entry = ctk.CTkEntry(
+        window, 
+        placeholder_text="Enter the command...", 
+        font=("Consolas", 13),
+        height=25,
+        corner_radius=0,
+        
+        fg_color="#FFE600",     
+        text_color="black",    
+        border_color="#FFE600"  
+    )
+    entry.pack(fill="x", padx=10, pady=(0, 10))
+    entry.focus()
 
-    placeholder = "Enter the command..."
-    entry.insert(0, placeholder)
-    entry.configure(fg="gray")
+    entry.bind("<Enter>", lambda e: entry.configure(border_color="#F0F0F0")) 
+    entry.bind("<Leave>", lambda e: entry.configure(border_color="#FFE600")) 
 
-    def on_focus_in(event):
-        if entry.get() == placeholder:
-            entry.delete(0, tk.END)
-            entry.configure(fg="white")
 
-    def on_focus_out(event):
-        if entry.get() == "":
-            entry.insert(0, placeholder)
-            entry.configure(fg="gray")
-
-    entry.bind("<FocusIn>", on_focus_in)
-    entry.bind("<FocusOut>", on_focus_out)
-
-    entry.focus_set()
 
     rgb_active = False
     rgb_colors = ["red", "orange", "yellow", "green", "blue", "purple", "pink"]
@@ -113,41 +109,21 @@ def run_gui():
     def update_rgb():
         nonlocal rgb_index
         if rgb_active:
-            entry.configure(bg=rgb_colors[rgb_index], fg="black")
+            entry.configure(fg_color=rgb_colors[rgb_index], text_color="black")
             rgb_index = (rgb_index + 1) % len(rgb_colors)
             window.after(300, update_rgb)
+
+
+    entry.bind("<Return>", lambda event: handle_command(event))
 
     def handle_command(event):
         nonlocal rgb_active
         command = entry.get().strip().lower()
-        entry.delete(0, tk.END)
-
-        def handle_command(event):
-            global custom_image_path
-    
-            command = entry.get().strip().lower()
-    #За этим комментарием код для команд. Вы можете добавить новые команды, но в репозитории укажите свои команды, как новые!
-
-        if not command or command == placeholder:
+        entry.delete(0, "end")
+        if not command:
             return
 
         insert_output(command + "\n")
-
-
-        #if command == "help":          Это старая версия команды хэлп, в ней банально много команд не поместилось бы.
-         #   help_text = """
-#? Available commands:
-#terminal
-
-  #help              NULL             rgbm
-  #ver               NULL             calc
-  #date              NULL             weather
-  #clear             NULL             random 3
-  #info              NULL             random 10
-  #exit              NULL             random 100
-  #theme             NULL             calc            
-#"""
-            #insert_output(help_text)
 
         if command == "help":
             # Категории хэлп
@@ -158,27 +134,6 @@ def run_gui():
             insert_output("─" * 40 + "\n")
             insert_output("Type 'help <category>' for detailed commands\n")
             insert_output("  Example: help system\n")                           
-    #    if " && " in command:
-     #       commands = command.split(" && ")         
-     #       for cmd in commands:
-      #          cmd = cmd.strip()             У этой команды беды с выполнением. Лучше использовать run.
-    #            insert_output(f"➜ {cmd}\n")
-      #          try:
-         #           import subprocess
-             #       result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-           #         if result.stdout:
-            #            insert_output(result.stdout)
-           #         if result.stderr:
-           #             insert_output(" " + result.stderr)
-          #          if result.returncode != 0:
-           #             insert_output(f" Command failed: {cmd}\n")
-           #             return
-          #      except Exception as e:
-           #         insert_output(f" Error: {e}\n")
-           #         return
-           #insert_output(" All commands executed\n")
-            #return
-
         elif command == "ver":
             ver_text = """
                                                             
@@ -221,9 +176,7 @@ def run_gui():
             insert_output("─" * 40 + "\n")
             insert_output("  night      - Black background, white text\n")
             insert_output("  light      - White background, black text\n")
-            insert_output("  classic    - Classic black + blue input\n")
-            insert_output("  lemon      - Yellow accents (lemon style)\n")
-            insert_output("  forest     - Green theme")
+            insert_output("  normal     - Classic black + blue input\n")
             #insert_output("  rgbm       - Rainbow input bar\n") ргб мод слишком вырвиглазный, для серьезной программы
             insert_output("─" * 40 + "\n")
         elif command.startswith("calc "):
@@ -371,11 +324,11 @@ def run_gui():
                                                                                                 #     ВНИЗУ КОМАНДА CLEAR
         elif command == "clear":
             output.configure(state="normal")
-            output.delete(1.0, tk.END)
+            output.delete(1.0, ctk.END)
             output.configure(state="disabled")
-            insert_output("🍋 Lemon Terminal v1.2 beta\n")
+            insert_output("Lemon Terminal v1.3 beta\n")
             insert_output("Type 'help' for a categories of commands.\n")  
-            insert_output("To type, click on the blue bar.\n\n")
+            insert_output("|To type, click on the blue bar.\n\n", "gray_hint")
         elif command.startswith("echo "):
             text = command[5:]
             insert_output(text + "\n")
@@ -390,15 +343,15 @@ def run_gui():
             Processor: {platform.processor()}
 """
             insert_output(info)
-        elif command.startswith("font size "): #ПРОШУ, не ставьте огромные значения ( 30+) в полном экарне, или маленьком окошке, у вас просто пропадёт синяя строка.
+        elif command.startswith("font size "): #ПРОШУ, не ставьте огромные значения ( 30+) в полном экарне, или маленьком окошке, у вас просто пропадёт синяя строка.( эта ошибка возможна только на старой версии)
             try:
                 size = int(command[10:])
                 if size < 8:
                     size = 8
                 elif size > 50:
                     size = 50
-                output.configure(font=("Courier", size))
-                entry.configure(font=("Courier", size))
+                output.configure(font=("monospace", size))
+                entry.configure(font=("monospace", size))
                 insert_output(f"Font size set to: {size}\n")
             except:
                 insert_output("Usage: font size <number> (8-50)\n")
@@ -426,79 +379,38 @@ def run_gui():
             insert_output(str(random.randint(1, 10)) + "\n")
         elif command == "random 100":
             insert_output(str(random.randint(1, 100)) + "\n")
-        elif command.startswith("launch"):
-            parts = command.split()
-            if len(parts) < 1:
-                insert_output("usage: launch <app>\n")
-            else:
-                app = parts[1]
-                os.system(app + " &")
-                insert_output("launching " + app + "...\n")
-        #ВНИМАНИЕ Команда launch недоработана, иногда команда может крашнуть ОС, я не убираю её, ведь она работает, но почему иногда вылетает, мне неведомо. ПОЛЬЗУЙТЕСЬ НА СВОЙ СТРАХ И РИСК!
-        #elif command == "theme old":
-        #    rgb_active = False                        #ДАННАЯ ТЕМА ПЛОХО ОТОБРАЖАЕТСЯ
-        #    window.configure(bg="#C0C0C0")
-        #    output.configure(bg="#C0C0C0", fg="#000000")
-        #    entry.configure(bg="#000000", fg="#000000")
-        #    insert_output("Old theme activated!\n")
-        elif command == "theme forest": #Мне показалось забавным, иметь в терминале визуальные темы :)
-            rgb_active = False
-            window.configure(bg="#1A2F1A")
-            output.configure(bg="#1A2F1A", fg="#A8D5A2")
-            entry.configure(bg="#2E4F2E", fg="#A8D5A2")
-            insert_output("Theme set to: FOREST\n")
         elif command == "theme night":
             rgb_active = False
-            window.configure(bg="black")
-            output.configure(bg="black", fg="white")
-            entry.configure(bg="white", fg="black")
+            window.configure(fg_color="black")
+            output.configure(fg_color="black", text_color="white")
+            entry.configure(fg_color="white", text_color="black", border_color="white")
             insert_output("Theme set to: NIGHT\n")
         elif command == "theme light":
             rgb_active = False
-            window.configure(bg="white")
-            output.configure(bg="white", fg="black")
-            entry.configure(bg="black", fg="white")
+            window.configure(fg_color="white")
+            output.configure(fg_color="white", text_color="black")
+            entry.configure(fg_color="black", text_color="white", border_color="black")
             insert_output("Theme set to: LIGHT\n")
-        elif command == "theme classic":
+        elif command == "theme normal":
             rgb_active = False
-            window.configure(bg="black")
-            output.configure(bg="black", fg="white")
-            entry.configure(bg="#0000AA", fg="white")
-            insert_output("Theme set to: CLASSIC\n")
-        elif command == "theme lemon":
-            rgb_active = False
-            window.configure(bg="black")
-            output.configure(bg="black", fg="#F7DC6F")        # лимончики
-            entry.configure(bg="#F7DC6F", fg="black")        # лимонный ввод
-            insert_output("Theme set to: LEMON\n")
-        #elif command == "rgbm":                        Это РГБ мод, где вся строка переливается цветами.
-        #    if rgb_active:
-        #        
-        #        rgb_active = False
-        #        window.configure(bg="black")
-        #        output.configure(bg="black", fg="white")
-        #        entry.configure(bg="#0000AA", fg="white")
-        #        insert_output("RGB MODE DEACTIVATED!\n")
-        #    else:
-        #        
-        #        rgb_active = True
-        #        window.configure(bg="black")
-        #        output.configure(bg="black", fg="white")
-        #        update_rgb()
-        #        insert_output("RGB MODE ACTIVATED!\n")
+            window.configure(fg_color="#1a1a1a")  
+            output.configure(fg_color="#1a1a1a", text_color="white")  
+            entry.configure(
+                fg_color="#FFE600",     
+                text_color="black",     
+                border_color="#FFE600"  
+            )
+            insert_output("Theme set to: NORMAL\n")
         else:
             insert_output("ERROR: such a command does not exist!\n")
 
         insert_output(get_prompt(), "green")
 
-    entry.bind("<Return>", handle_command)
-
     def focus_entry(event):
-        entry.focus_set()
-
+        entry.focus()
     output.bind("<Button-1>", focus_entry)
-
     window.mainloop()
 
 if __name__ == "__main__":
     run_gui()
+
