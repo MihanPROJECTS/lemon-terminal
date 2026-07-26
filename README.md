@@ -16,7 +16,9 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 
 
 
-![Lemon Terminal Demo](demo.gif)
+![Lemon Terminal Demo](assets/newDEMO.gif)
+
+
 
 
 
