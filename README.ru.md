@@ -12,9 +12,11 @@ Lemon Terminal — это простой и понятный терминал, �
 
 
 
-![Lemon Terminal Demo](demo.gif)
 
 
+
+
+![Lemon Terminal Demo](assets/newdemo.gif)
 
 
 
