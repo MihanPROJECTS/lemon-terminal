@@ -3,8 +3,8 @@
 
 # Lemon Terminal
 Lemon Terminal is a simple, straightforward terminal designed for those just starting to learn the command line. When I first started using a computer, I didn't understand how CMD and terminals worked. This project is my attempt to make the learning process easier and more engaging.
-
-🌐 **Разные языки / Other Languages:** [English](README.md) • [Русский](README.ru.md)
+>[!TIP]
+> **Разные языки / Other Languages:** [English](README.md) • [Русский](README.ru.md)
  
 
 
@@ -36,8 +36,8 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 
 ---
 
-
-### ⚠️ This is a beta version for testing!
+>[!WARNING]
+>### This is a beta version for testing!
 
 The program is under active development, so your Linux system may display an "Unknown file type" warning. This is normal for beta testing.
 
@@ -78,6 +78,7 @@ You can use the following built-in commands to manage your system, files, and te
 * **`echo`** — Print the entered text on the screen.
 * **`writefile`** — Write text directly into a file.
 
+>[!CAUTION]
 >  **WARNING! DANGEROUS COMMAND!**
 > * **`rmdir`** / **`rfdir`** — Permanent and forced deletion of files or folders along with all their contents. Use with extreme caution; deleted data cannot be recovered!
 
@@ -112,9 +113,9 @@ You can use the following built-in commands to manage your system, files, and te
 
 
 ---
-
-##  For Developers
-
-```bash
-python3 lemon.py
-```
+>[!TIP]
+>##  For Developers
+>
+>```bash
+>python3 lemon.py
+>```
