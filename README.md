@@ -79,7 +79,7 @@ You can use the following built-in commands to manage your system, files, and te
 * **`writefile`** — Write text directly into a file.
 
 >  **WARNING! DANGEROUS COMMAND!**
-> * **`rm`** / **`-rf`** — Permanent and forced deletion of files or folders along with all their contents. Use with extreme caution; deleted data cannot be recovered!
+> * **`rmdir`** / **`rfdir`** — Permanent and forced deletion of files or folders along with all their contents. Use with extreme caution; deleted data cannot be recovered!
 
 ---
 
