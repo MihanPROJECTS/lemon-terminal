@@ -7,27 +7,29 @@ import time
 import customtkinter as ctk
 from PIL import Image
 
+START_TIME = datetime.now()  # Это нужно, чтобы правильно выводить uptime!!!!!!!!!!
+
 ctk.set_appearance_mode("dark")  
 ctk.set_default_color_theme("blue")                     
 
-def get_prompt():
+def show_user():
     return "&\\"
 
 
 font_index = -1
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FONTOS_DIR = os.path.join(BASE_DIR, "fontos")
+FONTOS_DIR = os.path.join(BASE_DIR, "fontos") #КАК Я НЕНАВИЖУ ЭТО Говно, ну просто! Почему оно не хочет брать шрифты из папки, ведь все верно, но поддержка шрифтов давно выключена, это просто как напоминание.
 note_mode = False
 note_content = ""
 custom_image_path = ""
-help_data = {
+help_users = {
     "system": {
         "desc": "System commands",
-        "commands": ["sysinfo", "memory", "cpu", "disk", "ip"]
+        "commands": ["sysinfo", "memory", "cpu", "disk", "ip", "systime"]
     },
     "files": {
         "desc": "File management",
-        "commands": ["ls", "cd", "mkdir", "rmdir", "touch", "rmrf", "cat", "echo", "writefile"]
+        "commands": ["ls", "cd", "mkdir", "rmdir", "touch", "rmrf", "cat", "echo", "writefile", "pwd"]
     },
     "themes": {
         "desc": "Themes and customization",
@@ -39,13 +41,13 @@ help_data = {
     },
     "terminal": {
         "desc": "Terminal commands",
-        "commands": ["ver", "help", "clear", "exit"]
+        "commands": ["ver", "help", "clear", "exit", "clearhistory", "uptime"]
     }
 }
 
-def run_gui():
+def start_gui():
     window = ctk.CTk()
-    window.title("Lemon Terminal")
+    window.title("Lemon Terminal") #Окошечко, а точнее название окна
     window.configure(fg_color="#1a1a1a")
     window.geometry("800x500")
     window.minsize(400, 460)
@@ -78,10 +80,10 @@ def run_gui():
             output.insert("end", text)
         output.configure(state="disabled")
         output.see("end")
-    insert_output("Lemon Terminal v1.3 beta\n")
-    insert_output("Type 'help' for a categories of commands.\n")
-    insert_output("|To type, click on the blue bar.\n\n", "gray_hint")
-    insert_output(get_prompt(), "green")
+    insert_output("Lemon Terminal v1.4 beta\n") #версия проекта
+    insert_output("Type 'help' for a categories of commands.\n") 
+    insert_output("|To type, click on the input bar.\n\n", "gray_hint") #помощь новичкам
+    insert_output(show_user(), "green")
 
     entry = ctk.CTkEntry(
         window, 
@@ -106,35 +108,48 @@ def run_gui():
     rgb_colors = ["red", "orange", "yellow", "green", "blue", "purple", "pink"]
     rgb_index = 0
 
-    def update_rgb():
+    def rgb_plus_fps():
         nonlocal rgb_index
         if rgb_active:
             entry.configure(fg_color=rgb_colors[rgb_index], text_color="black")
             rgb_index = (rgb_index + 1) % len(rgb_colors)
-            window.after(300, update_rgb)
+            window.after(300, rgb_plus_fps)
 
 
-    entry.bind("<Return>", lambda event: handle_command(event))
+    entry.bind("<Return>", lambda event: handle_user(event))
 
-    def handle_command(event):
+    def handle_user(event):
         nonlocal rgb_active
-        command = entry.get().strip().lower()
-        entry.delete(0, "end")
-        if not command:
+        user = entry.get().strip()
+        
+        if user:
+            if not hasattr(window, 'history'):
+                window.history = []
+                window.history_index = -1
+
+            if not window.history or window.history[-1] != user:
+                window.history.append(user)
+
+            window.history_index = -1
+            
+        user = user.lower() 
+        entry.delete(0, "end")    
+
+        if not user:
             return
 
-        insert_output(command + "\n")
+        insert_output(user + "\n")
 
-        if command == "help":
+        if user == "help":
             # Категории хэлп
             insert_output(" HELP - Available categories:\n")
             insert_output("─" * 40 + "\n")
-            for key, value in help_data.items():
+            for key, value in help_users.items():
                 insert_output(f"  {key}  - {value['desc']}\n")
             insert_output("─" * 40 + "\n")
             insert_output("Type 'help <category>' for detailed commands\n")
             insert_output("  Example: help system\n")                           
-        elif command == "ver":
+        elif user == "ver":
             ver_text = """
                                                             
      __                         _____               _         _ 
@@ -151,8 +166,8 @@ def run_gui():
 """
             insert_output(ver_text)
 
-        elif command.startswith("run "):
-            cmd = command[4:].strip()
+        elif user.startswith("run "):
+            cmd = user[4:].strip()
             try:
                 import subprocess
                 process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -162,16 +177,16 @@ def run_gui():
                 if stderr:
                     insert_output("⚠️ " + stderr)
                 if process.returncode != 0:
-                    insert_output(f" Command failed (exit code: {process.returncode})\n")
+                    insert_output(f" command failed (exit code: {process.returncode})\n")
                 else:
-                    insert_output(f" Command finished (exit code: {process.returncode})\n")
+                    insert_output(f" command finished (exit code: {process.returncode})\n")
             except FileNotFoundError:
-                insert_output(f" Command not found: {cmd}\n")
+                insert_output(f" command not found: {cmd}\n")
             except Exception as e:
                 insert_output(f" Error: {e}\n")
-        elif command == "date":
+        elif user == "date":
             insert_output(datetime.now().strftime("%d %B %Y") + "\n")
-        elif command == "theme":
+        elif user == "theme":
             insert_output("AVAILABLE THEMES:\n")
             insert_output("─" * 40 + "\n")
             insert_output("  night      - Black background, white text\n")
@@ -179,8 +194,8 @@ def run_gui():
             insert_output("  normal     - Classic black + blue input\n")
             #insert_output("  rgbm       - Rainbow input bar\n") ргб мод слишком вырвиглазный, для серьезной программы
             insert_output("─" * 40 + "\n")
-        elif command.startswith("calc "):
-            expression = command[5:].strip()
+        elif user.startswith("calc "):
+            expression = user[5:].strip()
             try:
                 #ЛУЧШЕ НЕ МЕНЯЙТЕ ДАННЫЙ НАБОР ЗНАКОВ ДЛЯ КАЛЬКУЛЯТОРА, ЭТО ЗАЩИТА, ВЕДЬ ДАННАЯ ФУНКЦИЯ МОЖЕТ ВЫПОЛНЯТЬ ЛЮБОЙ КОД!
                 allowed = "0123456789+-*/().% "
@@ -194,7 +209,7 @@ def run_gui():
                 insert_output(" Division by zero!\n")
             except:
                 insert_output(" Invalid expression\n")
-        elif command == "fullscreen":
+        elif user == "fullscreen":
             state = window.attributes('-fullscreen')
             window.attributes('-fullscreen', not state)
             if state:
@@ -202,13 +217,21 @@ def run_gui():
             else:
                 insert_output("Fullscreen: ON\n")
 
-        elif command == "extra help":
+        elif user == "extra help":
             insert_output("This is a fallback version of the help command, without the full directories.")
-            insert_output("Commands: clear, exit, sysinfo, calc, date, theme < directory >")
+            insert_output("commands: clear, exit, sysinfo, calc, date, theme < directory >")
+
+        elif user == "clearhistory":
+            window.history = []
+            window.history_index = -1
+            insert_output("History cleared!\n")
+
+        elif user == "pwd":
+            insert_output(os.getcwd() + "\n")
 
                 # Дальше идут команды файловые
 
-        elif command == "ls":
+        elif user == "ls":
             try:
                 files = os.listdir(".")
                 insert_output(" Files:\n")
@@ -216,7 +239,7 @@ def run_gui():
                     insert_output(f"  {f}\n")
             except Exception as e:
                 insert_output(f" Error: {e}\n")
-        elif command == "ip":
+        elif user == "ip":
             try:
                 import socket
                 hostname = socket.gethostname()
@@ -225,8 +248,8 @@ def run_gui():
                 insert_output(f" IP Address: {ip}\n")
             except Exception as e:
                 insert_output(f" Error: {e}\n")
-        elif command.startswith("cat "):
-            name = command[4:].strip()
+        elif user.startswith("cat "):
+            name = user[4:].strip()
             try:
                 with open(name, "r") as f:
                     content = f.read()
@@ -235,10 +258,10 @@ def run_gui():
                 insert_output(f" File not found: {name}\n")
             except Exception as e:
                 insert_output(f" Error: {e}\n")
-        elif command == "cd":
+        elif user == "cd":
             insert_output(os.getcwd() + "\n")
-        elif command.startswith("rmrf "):
-            name = command[5:].strip()
+        elif user.startswith("rmrf "):
+            name = user[5:].strip()
             import shutil
             try:
                 shutil.rmtree(name)
@@ -247,8 +270,8 @@ def run_gui():
                 insert_output(f" Not found: {name}\n")
             except Exception as e:
                 insert_output(f" Error: {e}\n")
-        elif command.startswith("rmdir "):
-            name = command[6:].strip()
+        elif user.startswith("rmdir "):
+            name = user[6:].strip()
             try:
                 os.rmdir(name)
                 insert_output(f" Directory deleted: {name}\n")
@@ -259,8 +282,8 @@ def run_gui():
             except Exception as e:
                 insert_output(f" Error: {e}\n")
 
-        elif command.startswith("cd "):
-            path = command[3:].strip()
+        elif user.startswith("cd "):
+            path = user[3:].strip()
             if path == "":
                 insert_output(" Usage: cd <path>\n")
             else:
@@ -272,15 +295,15 @@ def run_gui():
                 except Exception as e:
                     insert_output(f" Error: {e}\n")
 
-        elif command.startswith("mkdir "):
-            name = command[6:].strip()
+        elif user.startswith("mkdir "):
+            name = user[6:].strip()
             try:
                 os.mkdir(name)
                 insert_output(f" Created: {name}\n")
             except Exception as e:
                 insert_output(f" Error: {e}\n")
-        elif command.startswith("writefile "):
-            parts = command[10:].split(" ", 1)
+        elif user.startswith("writefile "):
+            parts = user[10:].split(" ", 1)
             if len(parts) < 2:
                 insert_output(" Usage: writefile <filename> <text>\n")
             else:
@@ -293,27 +316,69 @@ def run_gui():
                 except Exception as e:
                     insert_output(f" Error: {e}\n")
 
-        elif command.startswith("touch "):
-            name = command[6:].strip()
+        elif user == "uptime":
+            diff = datetime.now() - START_TIME
+            days = diff.days
+            hours = diff.seconds // 3600
+            minutes = (diff.seconds % 3600) // 60
+            seconds = diff.seconds % 60
+            
+            if days > 0:
+                insert_output(f" Uptime: {days}d {hours}h {minutes}m {seconds}s\n")
+            elif hours > 0:
+                insert_output(f" Uptime: {hours}h {minutes}m {seconds}s\n")
+            elif minutes > 0:
+                insert_output(f" Uptime: {minutes}m {seconds}s\n")
+            else:
+                insert_output(f" Uptime: {seconds}s\n")
+        elif user == "systime":
+            try:
+                import psutil
+                boot_time = psutil.boot_time()  # Время с запуска ос
+                boot_datetime = datetime.fromtimestamp(boot_time)
+                now = datetime.now()
+                diff = now - boot_datetime
+                
+                days = diff.days
+                hours = diff.seconds // 3600
+                minutes = (diff.seconds % 3600) // 60
+                seconds = diff.seconds % 60
+                
+                # КРАСИВЫЙ ВЫВОД, ОЧЕНЬ КРАСИВЫЙ, ПРЯМО КРАСИВЕЙШИЙ!
+                if days > 0:
+                    insert_output(f" System uptime: {days}d {hours}h {minutes}m {seconds}s\n")
+                    insert_output(f" Started: {boot_datetime.strftime('%d %B %Y %H:%M:%S')}\n")
+                elif hours > 0:
+                    insert_output(f" System uptime: {hours}h {minutes}m {seconds}s\n")
+                    insert_output(f" Started: {boot_datetime.strftime('%H:%M:%S')}\n")
+                elif minutes > 0:
+                    insert_output(f" System uptime: {minutes}m {seconds}s\n")
+                else:
+                    insert_output(f" System uptime: {seconds}s\n")
+            except Exception as e:
+                insert_output(f" Error getting uptime: {e}\n")
+
+        elif user.startswith("touch "):
+            name = user[6:].strip()
             try:
                 with open(name, "w") as f:
                     pass
                 insert_output(f" Created: {name}\n")
             except Exception as e:
                 insert_output(f" Error: {e}\n")
-        elif command == "disk":
+        elif user == "disk":
             import shutil
             disk = shutil.disk_usage("/")
             total = disk.total // (1024**3)
             used = disk.used // (1024**3)
             free = disk.free // (1024**3)
             insert_output(f"Disk: {used}GB / {total}GB (free: {free}GB)\n")
-        elif command == "cpu":
+        elif user == "cpu":
             import psutil
             cpu_percent = psutil.cpu_percent(interval=1)
             cores = psutil.cpu_count()
             insert_output(f"CPU: {cpu_percent}% ({cores} cores)\n")
-        elif command == "memory":
+        elif user == "memory":
             import psutil
             mem = psutil.virtual_memory()
             total = mem.total // (1024**3)
@@ -322,17 +387,17 @@ def run_gui():
             percent = mem.percent
             insert_output(f"RAM: {used}GB / {total}GB ({percent}% used)\n")
                                                                                                 #     ВНИЗУ КОМАНДА CLEAR
-        elif command == "clear":
+        elif user == "clear":
             output.configure(state="normal")
             output.delete(1.0, ctk.END)
             output.configure(state="disabled")
-            insert_output("Lemon Terminal v1.3 beta\n")
+            insert_output("Lemon Terminal v1.4 beta\n")
             insert_output("Type 'help' for a categories of commands.\n")  
-            insert_output("|To type, click on the blue bar.\n\n", "gray_hint")
-        elif command.startswith("echo "):
-            text = command[5:]
+            insert_output("|To type, click on the input bar.\n\n", "gray_hint")
+        elif user.startswith("echo "):
+            text = user[5:]
             insert_output(text + "\n")
-        elif command == "sysinfo":
+        elif user == "sysinfo":
             import platform
             info = f"""
             System: {platform.system()}
@@ -343,9 +408,9 @@ def run_gui():
             Processor: {platform.processor()}
 """
             insert_output(info)
-        elif command.startswith("font size "): #ПРОШУ, не ставьте огромные значения ( 30+) в полном экарне, или маленьком окошке, у вас просто пропадёт синяя строка.( эта ошибка возможна только на старой версии)
+        elif user.startswith("font size "): #ПРОШУ, не ставьте огромные значения ( 30+) в полном экарне, или маленьком окошке, у вас просто пропадёт синяя строка.( эта ошибка возможна только на старой версии)
             try:
-                size = int(command[10:])
+                size = int(user[10:])
                 if size < 8:
                     size = 8
                 elif size > 50:
@@ -355,10 +420,10 @@ def run_gui():
                 insert_output(f"Font size set to: {size}\n")
             except:
                 insert_output("Usage: font size <number> (8-50)\n")
-        elif command.startswith("help "):
-            category = command[5:].strip().lower()
-            if category in help_data:
-                data = help_data[category]
+        elif user.startswith("help "):
+            category = user[5:].strip().lower()
+            if category in help_users:
+                data = help_users[category]
                 insert_output(f" {category.upper()} - {data['desc']}:\n")
                 insert_output("─" * 40 + "\n")
                 for cmd in data['commands']:
@@ -368,30 +433,30 @@ def run_gui():
                 insert_output(f" Category '{category}' not found.\n")
                 insert_output("Available: system, files, themes, tools, terminal\n")
     
-        elif command == "exit":
+        elif user == "exit":
             window.destroy()
             return
-        elif command == "lemon": #Пасхалочка
+        elif user == "lemon": #Пасхалочка
             insert_output("Lemon Terminal was created by Mihail. :]\n")
-        elif command == "random 3":
+        elif user == "random 3":
             insert_output(str(random.randint(1, 3)) + "\n")
-        elif command == "random 10":
+        elif user == "random 10":
             insert_output(str(random.randint(1, 10)) + "\n")
-        elif command == "random 100":
+        elif user == "random 100":
             insert_output(str(random.randint(1, 100)) + "\n")
-        elif command == "theme night":
+        elif user == "theme night":
             rgb_active = False
             window.configure(fg_color="black")
             output.configure(fg_color="black", text_color="white")
             entry.configure(fg_color="white", text_color="black", border_color="white")
             insert_output("Theme set to: NIGHT\n")
-        elif command == "theme light":
+        elif user == "theme light":
             rgb_active = False
             window.configure(fg_color="white")
             output.configure(fg_color="white", text_color="black")
             entry.configure(fg_color="black", text_color="white", border_color="black")
             insert_output("Theme set to: LIGHT\n")
-        elif command == "theme normal":
+        elif user == "theme normal":
             rgb_active = False
             window.configure(fg_color="#1a1a1a")  
             output.configure(fg_color="#1a1a1a", text_color="white")  
@@ -402,15 +467,47 @@ def run_gui():
             )
             insert_output("Theme set to: NORMAL\n")
         else:
-            insert_output("ERROR: such a command does not exist!\n")
+            insert_output("ERROR: such a command does not exist!\n") #ОШИБОЧКА!
 
-        insert_output(get_prompt(), "green")
+        insert_output(show_user(), "green")
 
     def focus_entry(event):
         entry.focus()
     output.bind("<Button-1>", focus_entry)
+    window.history = []
+    window.history_index = -1
+
+    def history_up(event):
+
+        if not window.history:
+            return "break"
+            
+        if window.history_index == -1:
+            window.history_index = len(window.history) - 1
+        elif window.history_index > 0:
+            window.history_index -= 1
+            
+        entry.delete(0, "end")
+        entry.insert(0, window.history[window.history_index])
+        return "break"
+
+    def history_down(event): #Оно работает, но как-то странно, раз через раз.
+        if window.history_index == -1:
+            return "break"
+            
+        if window.history_index < len(window.history) - 1:
+            window.history_index += 1
+            entry.delete(0, "end")
+            entry.insert(0, window.history[window.history_index])
+        else:
+            window.history_index = -1
+            entry.delete(0, "end")
+        return "break"
+    entry.bind("<Up>", history_up)
+    entry.bind("<Down>", history_down)
+    entry.focus()
+    
     window.mainloop()
 
 if __name__ == "__main__":
-    run_gui()
-
+    start_gui()
