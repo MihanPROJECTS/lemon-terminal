@@ -111,6 +111,7 @@ You can use the following built-in commands to manage your system, files, and te
 * **`help`** — Display the general list of all available command categories.
 * **`help <directory>`** — Show help documentation for a specific category (e.g., `help files`).
 * **`uptime`** — Time since terminal startup.
+* **`clearhistory`** — Clear history "↑" and "↓" buttons.
 
 
 ---
