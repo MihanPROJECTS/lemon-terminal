@@ -7,7 +7,7 @@ import time
 import customtkinter as ctk
 from PIL import Image
 
-START_TIME = datetime.now()  # Это нужно, чтобы правильно выводить uptime!!!!!!!!!!
+START_TIME = datetime.now() 
 
 ctk.set_appearance_mode("dark")  
 ctk.set_default_color_theme("blue")                     
@@ -226,8 +226,6 @@ def start_gui():
 
         elif user == "pwd":
             insert_output(os.getcwd() + "\n")
-
-                # Дальше идут команды файловые
 
         elif user == "ls":
             try:
@@ -464,7 +462,7 @@ def start_gui():
             )
             insert_output("Theme set to: NORMAL\n")
         else:
-            insert_output("ERROR: such a command does not exist!\n") #ОШИБОЧКА!
+            insert_output("ERROR: such a command does not exist!\n")
 
         insert_output(show_user(), "green")
 
