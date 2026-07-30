@@ -6,7 +6,7 @@ import psutil
 import time
 import customtkinter as ctk
 from PIL import Image
-
+#Also, try oxygenpad!
 START_TIME = datetime.now() 
 
 ctk.set_appearance_mode("dark")  
