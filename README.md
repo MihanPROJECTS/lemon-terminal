@@ -87,9 +87,7 @@ You can use the following built-in commands to manage your system, files, and te
 ###  THEMES
 * **`fullscreen`** — Toggle full-screen mode for the terminal window.
 * **`font size`** — Change the interface font size.
-* **`theme <classic>`** — Enable the standard black-and-blue theme.
-* **`theme <lemon>`** — Enable the lemon-yellow theme.
-* **`theme <forest>`** — Enable the green forest theme.
+* **`theme <normal>`** — Enable the standard black-and-blue theme.
 * **`theme <night>`** — Enable the dark night theme.
 * **`theme <light>`** — Enable the clean light theme.
 
