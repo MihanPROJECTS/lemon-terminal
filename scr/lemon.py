@@ -47,7 +47,7 @@ help_users = {
 
 def start_gui():
     window = ctk.CTk()
-    window.title("Lemon Terminal") #Окошечко, а точнее название окна
+    window.title("Lemon Terminal")
     window.configure(fg_color="#1a1a1a")
     window.geometry("800x500")
     window.minsize(400, 460)
@@ -80,9 +80,9 @@ def start_gui():
             output.insert("end", text)
         output.configure(state="disabled")
         output.see("end")
-    insert_output("Lemon Terminal v1.4 beta\n") #версия проекта
+    insert_output("Lemon Terminal v1.4 beta\n")
     insert_output("Type 'help' for a categories of commands.\n") 
-    insert_output("|To type, click on the input bar.\n\n", "gray_hint") #помощь новичкам
+    insert_output("|To type, click on the input bar.\n\n", "gray_hint")
     insert_output(show_user(), "green")
 
     entry = ctk.CTkEntry(
@@ -141,7 +141,6 @@ def start_gui():
         insert_output(user + "\n")
 
         if user == "help":
-            # Категории хэлп
             insert_output(" HELP - Available categories:\n")
             insert_output("─" * 40 + "\n")
             for key, value in help_users.items():
@@ -192,7 +191,6 @@ def start_gui():
             insert_output("  night      - Black background, white text\n")
             insert_output("  light      - White background, black text\n")
             insert_output("  normal     - Classic black + blue input\n")
-            #insert_output("  rgbm       - Rainbow input bar\n") ргб мод слишком вырвиглазный, для серьезной программы
             insert_output("─" * 40 + "\n")
         elif user.startswith("calc "):
             expression = user[5:].strip()
@@ -343,8 +341,7 @@ def start_gui():
                 hours = diff.seconds // 3600
                 minutes = (diff.seconds % 3600) // 60
                 seconds = diff.seconds % 60
-                
-                # КРАСИВЫЙ ВЫВОД, ОЧЕНЬ КРАСИВЫЙ, ПРЯМО КРАСИВЕЙШИЙ!
+                !
                 if days > 0:
                     insert_output(f" System uptime: {days}d {hours}h {minutes}m {seconds}s\n")
                     insert_output(f" Started: {boot_datetime.strftime('%d %B %Y %H:%M:%S')}\n")
@@ -491,7 +488,7 @@ def start_gui():
         entry.insert(0, window.history[window.history_index])
         return "break"
 
-    def history_down(event): #Оно работает, но как-то странно, раз через раз.
+    def history_down(event):
         if window.history_index == -1:
             return "break"
             
