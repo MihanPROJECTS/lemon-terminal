@@ -65,6 +65,7 @@ You can use the following built-in commands to manage your system, files, and te
 * **`cpu`** — Show processor model and current CPU load.
 * **`disk`** — Check available disk storage space.
 * **`ip`** — Display the current IP address of your device.
+* **`systime`** — Time since system startup.
 
 ---
 
@@ -77,6 +78,7 @@ You can use the following built-in commands to manage your system, files, and te
 * **`cat`** — Read and display the contents of a text file.
 * **`echo`** — Print the entered text on the screen.
 * **`writefile`** — Write text directly into a file.
+* **`pwd`** — Shows the directory you are currently in.
 
 >[!CAUTION]
 >  **WARNING! DANGEROUS COMMAND!**
@@ -108,6 +110,7 @@ You can use the following built-in commands to manage your system, files, and te
 * **`exit`** — Close the application and exit the terminal.
 * **`help`** — Display the general list of all available command categories.
 * **`help <directory>`** — Show help documentation for a specific category (e.g., `help files`).
+* **`uptime`** — Time since terminal startup.
 
 
 ---
