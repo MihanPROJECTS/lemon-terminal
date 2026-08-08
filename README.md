@@ -3,7 +3,9 @@
 
 # Lemon Terminal
 Lemon Terminal is a simple, straightforward terminal designed for those just starting to learn the command line. When I first started using a computer, I didn't understand how CMD and terminals worked. This project is my attempt to make the learning process easier and more engaging.
->[!TIP]
+> [!IMPORTANT]
+> Starting with version 1.3, a new terminal rendering method using CustomTkinter has been added.
+
 > **Разные языки / Other Languages:** [English](README.md) • [Русский](README.ru.md)
  
 
