@@ -68,9 +68,9 @@ You can use the following built-in commands to manage your system, files, and te
 * **`disk`** - Check available disk storage space.
 * **`ip`** - Display the current IP address of your device.
 * **`systime`** - Time since system startup.
-* **`whoami`** - Time since system startup.
-* **`pslist`** - Time since system startup.
-* **`pklist`** - Time since system startup.
+* **`whoami`** - Outputs the current operating system username.
+* **`pslist`** - List of the top 40 resource-heavy active processes.
+* **`pkill <PID>`** - Terminates any system process directly from the console line.
 
 ---
 
@@ -84,9 +84,9 @@ You can use the following built-in commands to manage your system, files, and te
 * **`echo`** - Print the entered text on the screen.
 * **`writefile`** - Write text directly into a file.
 * **`pwd`** - Shows the directory you are currently in.
-* **`fcount`** - Shows the directory you are currently in.
-* **`fview`** - Shows the directory you are currently in.
-* **`b64encode`** - Shows the directory you are currently in.
+* **`fcount`** - Provides instant folder and file statistics for your current working directory.
+* **`fview <filename>`** - Opens and reads plain text files with clean, consecutive line numbering for easier debugging.
+* **`b64encode <text>`** - Inline text encoder that instantly converts strings into Base64 format.
 
 >[!CAUTION]
 >  **WARNING! DANGEROUS COMMAND!**
