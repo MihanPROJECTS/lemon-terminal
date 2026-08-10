@@ -33,8 +33,8 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 
 **[Download Lemon Terminal (Releases page)](https://github.com/MihanPROJECTS/lemon-terminal/releases)**
 
-- **Windows** — `LemonTerminal.exe` 	*Unstable version*
-- **Linux** — `LemonTerminal`
+- **Windows** - `LemonTerminal.exe` 	*Unstable version*
+- **Linux** - `LemonTerminal`
 
 ---
 
@@ -62,58 +62,64 @@ Open the file. Type `help` for a list of commands.
 You can use the following built-in commands to manage your system, files, and terminal appearance.
 
 ###  SYSTEM
-* **`sysinfo`** — Show detailed hardware characteristics of the PC.
-* **`memory`** — Display current RAM status.
-* **`cpu`** — Show processor model and current CPU load.
-* **`disk`** — Check available disk storage space.
-* **`ip`** — Display the current IP address of your device.
-* **`systime`** — Time since system startup.
+* **`sysinfo`** - Show detailed hardware characteristics of the PC.
+* **`memory`** - Display current RAM status.
+* **`cpu`** - Show processor model and current CPU load.
+* **`disk`** - Check available disk storage space.
+* **`ip`** - Display the current IP address of your device.
+* **`systime`** - Time since system startup.
+* **`whoami`** - Time since system startup.
+* **`pslist`** - Time since system startup.
+* **`pklist`** - Time since system startup.
 
 ---
 
 ###  FILES
-* **`ls`** — List all files and folders in the current directory.
-* **`cd`** — Navigate to a different folder.
-* **`mkdir`** — Create a new folder.
-* **`rmdir`** — Delete an empty folder.
-* **`touch`** — Create an empty file.
-* **`cat`** — Read and display the contents of a text file.
-* **`echo`** — Print the entered text on the screen.
-* **`writefile`** — Write text directly into a file.
-* **`pwd`** — Shows the directory you are currently in.
+* **`ls`** - List all files and folders in the current directory.
+* **`cd`** - Navigate to a different folder.
+* **`mkdir`** - Create a new folder.
+* **`rmdir`** - Delete an empty folder.
+* **`touch`** -Create an empty file.
+* **`cat`** - Read and display the contents of a text file.
+* **`echo`** - Print the entered text on the screen.
+* **`writefile`** - Write text directly into a file.
+* **`pwd`** - Shows the directory you are currently in.
+* **`fcount`** - Shows the directory you are currently in.
+* **`fview`** - Shows the directory you are currently in.
+* **`b64encode`** - Shows the directory you are currently in.
 
 >[!CAUTION]
 >  **WARNING! DANGEROUS COMMAND!**
-> * **`rmdir`** / **`rfdir`** — Permanent and forced deletion of files or folders along with all their contents. Use with extreme caution; deleted data cannot be recovered!
+> * **`rmdir`** / **`rfdir`** - Permanent and forced deletion of files or folders along with all their contents. Use with extreme caution; deleted data cannot be recovered!
 
 ---
 
 ###  THEMES
-* **`fullscreen`** — Toggle full-screen mode for the terminal window.
-* **`font size`** — Change the interface font size.
-* **`theme <normal>`** — Enable the standard black-and-blue theme.
-* **`theme <night>`** — Enable the dark night theme.
-* **`theme <light>`** — Enable the clean light theme.
+* **`fullscreen`** - Toggle full-screen mode for the terminal window.
+* **`font size`** - Change the interface font size.
+* **`theme <normal>`** - Enable the standard black-and-blue theme.
+* **`theme <night>`** - Enable the dark night theme.
+* **`theme <light>`** - Enable the clean light theme.
 
 ---
 
 ###  TOOLS
-* **`date`** — Display the current date.
-* **`calc`** — Launch the built-in math calculator.
-* **`random 3`** — Generate a random number from 1 to 3.
-* **`random 10`** — Generate a random number from 1 to 10.
-* **`random 100`** — Generate a random number from 1 to 100.
+* **`date`** - Display the current date.
+* **`calc`** - Launch the built-in math calculator.
+* **`random 3`** - Generate a random number from 1 to 3.
+* **`random 10`** - Generate a random number from 1 to 10.
+* **`random 100`** - Generate a random number from 1 to 100.
 
 ---
 
 ###  TERMINAL
-* **`ver`** — Show the current version of Lemon Terminal.
-* **`clear`** — Wipe the console screen completely.
-* **`exit`** — Close the application and exit the terminal.
-* **`help`** — Display the general list of all available command categories.
-* **`help <directory>`** — Show help documentation for a specific category (e.g., `help files`).
-* **`uptime`** — Time since terminal startup.
-* **`clearhistory`** — Clear history "↑" and "↓" buttons.
+* **`ver`** - Show the current version of Lemon Terminal.
+* **`clear`** - Wipe the console screen completely.
+* **`exit`** - Close the application and exit the terminal.
+* **`help`** - Display the general list of all available command categories.
+* **`help <directory>`** - Show help documentation for a specific category (e.g., `help files`).
+* **`uptime`** - Time since terminal startup.
+* **`clearhistory`** - Clear history "↑" and "↓" buttons.
 
 
 ---
