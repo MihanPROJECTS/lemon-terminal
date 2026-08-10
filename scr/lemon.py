@@ -6,8 +6,8 @@ import psutil
 import time
 import customtkinter as ctk
 from PIL import Image
-#Also, try oxygenpad!
-START_TIME = datetime.now() 
+
+START_TIME = datetime.now()
 
 ctk.set_appearance_mode("dark")  
 ctk.set_default_color_theme("blue")                     
@@ -18,18 +18,18 @@ def show_user():
 
 font_index = -1
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FONTOS_DIR = os.path.join(BASE_DIR, "fontos") #КАК Я НЕНАВИЖУ ЭТО Говно, ну просто! Почему оно не хочет брать шрифты из папки, ведь все верно, но поддержка шрифтов давно выключена, это просто как напоминание.
+FONTOS_DIR = os.path.join(BASE_DIR, "fontos")
 note_mode = False
 note_content = ""
 custom_image_path = ""
 help_users = {
     "system": {
         "desc": "System commands",
-        "commands": ["sysinfo", "memory", "cpu", "disk", "ip", "systime"]
+        "commands": ["sysinfo", "memory", "cpu", "disk", "ip", "systime", "pslist", "pkill", "whoami"]
     },
     "files": {
         "desc": "File management",
-        "commands": ["ls", "cd", "mkdir", "rmdir", "touch", "rmrf", "cat", "echo", "writefile", "pwd"]
+        "commands": ["ls", "cd", "mkdir", "rmdir", "touch", "rmrf", "cat", "echo", "writefile", "pwd", "fcount", "fview", "b64encode"]
     },
     "themes": {
         "desc": "Themes and customization",
@@ -47,7 +47,7 @@ help_users = {
 
 def start_gui():
     window = ctk.CTk()
-    window.title("Lemon Terminal")
+    window.title("Lemon Terminal") #название окна
     window.configure(fg_color="#1a1a1a")
     window.geometry("800x500")
     window.minsize(400, 460)
@@ -80,8 +80,8 @@ def start_gui():
             output.insert("end", text)
         output.configure(state="disabled")
         output.see("end")
-    insert_output("Lemon Terminal v1.4 beta\n")
-    insert_output("Type 'help' for a categories of commands.\n") 
+    insert_output("Lemon Terminal v1.5 beta\n")
+    insert_output("Type 'help' for categories of commands.\n") 
     insert_output("|To type, click on the input bar.\n\n", "gray_hint")
     insert_output(show_user(), "green")
 
@@ -141,6 +141,7 @@ def start_gui():
         insert_output(user + "\n")
 
         if user == "help":
+            # Категории хэлп
             insert_output(" HELP - Available categories:\n")
             insert_output("─" * 40 + "\n")
             for key, value in help_users.items():
@@ -227,6 +228,8 @@ def start_gui():
         elif user == "pwd":
             insert_output(os.getcwd() + "\n")
 
+                # Дальше идут команды файловые
+
         elif user == "ls":
             try:
                 files = os.listdir(".")
@@ -291,6 +294,77 @@ def start_gui():
                 except Exception as e:
                     insert_output(f" Error: {e}\n")
 
+        elif user == 'pslist':
+            import psutil
+            insert_output(f"{'PID':<8}{'Process Name':<25}{'Memory %':<10}\n")
+            insert_output("-" * 45 + "\n")
+            processes = sorted(psutil.process_iter(['pid', 'name', 'memory_percent']), 
+                            key=lambda p: p.info['memory_percent'], reverse=True)[:30]
+            for p in processes:
+                try:
+                    pid = p.info['pid']
+                    name = p.info['name'][:23]
+                    mem = f"{p.info['memory_percent']:.2f}%"
+                    insert_output(f"{pid:<8}{name:<25}{mem:<10}\n")
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    continue
+
+        elif user.startswith('pkill '):
+            import psutil
+            pid_str = user[6:].strip()
+            if pid_str.isdigit():
+                pid = int(pid_str)
+                try:
+                    p = psutil.Process(pid)
+                    p_name = p.name()
+                    p.terminate()
+                    insert_output(f"Process {pid} ({p_name}) has been terminated.\n")
+                except psutil.NoSuchProcess:
+                    insert_output(f"Error: PID {pid} not found.\n")
+                except psutil.AccessDenied:
+                    insert_output(f"Error: Process {pid} is protected by the Linux kernel.\n")
+            else:
+                insert_output("Error: Please specify a valid numeric PID (e.g., pkill 1234).\n")
+
+        elif user.startswith('b64encode '): #эта команда на будущее, она работает, но другая команда, которая декодирует и вызывает ошибки, была удалена. Можете пользоваться, но декодирование будет в будущем обновлении. :)
+            import base64
+            text_str = user[10:]
+            if text_str:
+                try:
+                    encoded = base64.b64encode(text_str.encode('utf-8')).decode('utf-8')
+                    insert_output(f"Encoded: {encoded}\n")
+                except Exception as e:
+                    insert_output(f"Error: Could not encode text. {e}\n")
+            else:
+                insert_output("Error: Please specify text to encode (e.g., b64encode hello).\n")
+
+        elif user == 'whoami':
+            import getpass
+            insert_output(f"Current user: {getpass.getuser()}\n")
+
+        elif user == 'fcount':
+            try:
+                items = os.listdir('.')
+                files = [f for f in items if os.path.isfile(f)]
+                dirs = [d for d in items if os.path.isdir(d)]
+                insert_output(f"Directory Stats:\n  Files: {len(files)}\n  Folders: {len(dirs)}\n")
+            except Exception as e:
+                insert_output(f"Error scanning directory: {e}\n")
+
+        elif user.startswith('fview '):
+            filename = user[6:].strip()
+            if os.path.exists(filename) and os.path.isfile(filename):
+                try:
+                    insert_output(f"--- Content of {filename} ---\n")
+                    with open(filename, 'r', encoding='utf-8') as f:
+                        for index, line in enumerate(f, 1):
+                            insert_output(f"{index}: {line}")
+                    insert_output("\n--- End of File ---\n")
+                except Exception as e:
+                    insert_output(f"Error reading file: {e}\n")
+            else:
+                insert_output(f"Error: File '{filename}' not found.\n")
+
         elif user.startswith("mkdir "):
             name = user[6:].strip()
             try:
@@ -330,7 +404,7 @@ def start_gui():
         elif user == "systime":
             try:
                 import psutil
-                boot_time = psutil.boot_time()  # Время с запуска ос
+                boot_time = psutil.boot_time()
                 boot_datetime = datetime.fromtimestamp(boot_time)
                 now = datetime.now()
                 diff = now - boot_datetime
@@ -339,7 +413,8 @@ def start_gui():
                 hours = diff.seconds // 3600
                 minutes = (diff.seconds % 3600) // 60
                 seconds = diff.seconds % 60
-                !
+                
+                # КРАСИВЫЙ ВЫВОД
                 if days > 0:
                     insert_output(f" System uptime: {days}d {hours}h {minutes}m {seconds}s\n")
                     insert_output(f" Started: {boot_datetime.strftime('%d %B %Y %H:%M:%S')}\n")
@@ -386,8 +461,8 @@ def start_gui():
             output.configure(state="normal")
             output.delete(1.0, ctk.END)
             output.configure(state="disabled")
-            insert_output("Lemon Terminal v1.4 beta\n")
-            insert_output("Type 'help' for a categories of commands.\n")  
+            insert_output("Lemon Terminal v1.5 beta\n")
+            insert_output("Type 'help' for categories of commands.\n")  
             insert_output("|To type, click on the input bar.\n\n", "gray_hint")
         elif user.startswith("echo "):
             text = user[5:]
@@ -462,7 +537,7 @@ def start_gui():
             )
             insert_output("Theme set to: NORMAL\n")
         else:
-            insert_output("ERROR: such a command does not exist!\n")
+            insert_output("ERROR: such a command does not exist!\n") #ОШИБОЧКА!
 
         insert_output(show_user(), "green")
 
@@ -486,7 +561,7 @@ def start_gui():
         entry.insert(0, window.history[window.history_index])
         return "break"
 
-    def history_down(event):
+    def history_down(event): #Оно работает, я починил вылеты ( просто переписал команду заного 1:1 и это помогло).
         if window.history_index == -1:
             return "break"
             
