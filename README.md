@@ -36,6 +36,9 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 - **Windows** - `LemonTerminal.exe` 	*Rare issues*
 - **Linux** - `LemonTerminal`
 
+> [!IMPORTANT]
+> If you liked the project, please star it to support its future development.🌠
+
 ---
 
 >[!WARNING]
@@ -46,6 +49,9 @@ The program is under active development, so your Linux system may display an "Un
 **To launch the terminal:**
 1. Right-click the file -> *Properties* -> *Permissions*.
 2. Check the box *"Allow executing file as program"*.
+
+
+>[IMMORTAIT
 
 
 ---
