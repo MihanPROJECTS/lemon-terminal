@@ -29,7 +29,7 @@ Lemon Terminal — это простой и понятный терминал, �
  **[Скачать Lemon Terminal (Страница загрузки)](https://github.com/MihanPROJECTS/lemon-terminal/releases)**
 
 
-- **Windows** - `LemonTerminal.exe` 	*Нестабильная версия*
+- **Windows** - `LemonTerminal.exe` 	*Редкие релизы*
 - **Linux** - `LemonTerminal`
 
 ---
