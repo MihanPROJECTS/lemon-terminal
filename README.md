@@ -33,7 +33,7 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 
 **[Download Lemon Terminal (Releases page)](https://github.com/MihanPROJECTS/lemon-terminal/releases)**
 
-- **Windows** - `LemonTerminal.exe` 	*Unstable version*
+- **Windows** - `LemonTerminal.exe` 	*Rare issues*
 - **Linux** - `LemonTerminal`
 
 ---
