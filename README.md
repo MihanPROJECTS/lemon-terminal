@@ -126,6 +126,12 @@ You can use the following built-in commands to manage your system, files, and te
 * **`help <directory>`** - Show help documentation for a specific category (e.g., `help files`).
 * **`uptime`** - Time since terminal startup.
 * **`clearhistory`** - Clear history "↑" and "↓" buttons.
+* **`history`** - Show recently used commands.
+* **`ultra`** - Enable elevated privilege mode.
+* **`&&`** - Chain multiple commands together.
+* **`sleep`** - Pause operation for a specified time.
+* **`which`** - Locate the path of an executable file.
+* **`run`** - Execute an external file or script.
 
 
 ---
