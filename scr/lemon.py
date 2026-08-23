@@ -5,12 +5,10 @@ import platform
 import psutil
 import time
 import customtkinter as ctk
-from PIL import Image
 import getpass
 import shutil
 import subprocess
 import socket
-import re
 ULTRA_MODE = False
 VARIABLES = {} #это нужно для будущих обновлений
 START_TIME = datetime.now()
@@ -23,8 +21,8 @@ START_TIME = datetime.now()
 ctk.set_appearance_mode("dark")  
 ctk.set_default_color_theme("blue")                     
 
-def show_user():
-    return "&\\"
+#def show_user():
+#    return "&\\"
 
 
 font_index = -1
@@ -86,9 +84,9 @@ def start_gui():
     def show_user():
         user = getpass.getuser()
         if ULTRA_MODE:
-            return f"{user}@ultra# "
+            return f"{user}# "
         else:
-            return f"{user}@lemon$ "
+            return f"{user}$ "
 
     def insert_output(text, tag=None):
         output.configure(state="normal")
@@ -98,10 +96,9 @@ def start_gui():
             output.insert("end", text)
         output.configure(state="disabled")
         output.see("end")
-    insert_output("Lemon Terminal v1.5s1\n")
+    insert_output("Lemon Terminal v1.5s2b\n")
     insert_output("Type 'help' for categories of commands.\n") 
     insert_output("|To type, click on the input bar.\n\n", "gray_hint")
-    insert_output(show_user(), "green")
 
     entry = ctk.CTkEntry(
         window, 
@@ -152,7 +149,7 @@ def start_gui():
 
         if not user:
             return
-
+        insert_output(show_user(), "green")
         insert_output(user + "\n")
 
         if user == "help":
@@ -317,7 +314,6 @@ def start_gui():
             
             if not commands:
                 insert_output("  Error: empty command chain\n", "error")
-                insert_output(show_user(), "green")
                 return
             
             insert_output(f"  Running {len(commands)} commands...\n")
@@ -340,7 +336,6 @@ def start_gui():
                     insert_output(f"  Error: {e}\n", "error")
                     break
             
-            insert_output(show_user(), "green")
             return
 
         elif user == "pwd":
@@ -384,10 +379,44 @@ def start_gui():
             insert_output(os.getcwd() + "\n")
             return
 
+        elif user.startswith("rmdir "):
+            name = user[6:].strip()
+            current_dir = os.getcwd()
+            target = os.path.abspath(name)
+            
+            insert_output(f" Debug: Current dir: {current_dir}\n")
+            insert_output(f" Debug: Target: {target}\n")
+            insert_output(f" Debug: Exists: {os.path.exists(target)}\n")
+            insert_output(f" Debug: Is dir: {os.path.isdir(target)}\n")
+            
+            if not os.path.exists(target):
+                insert_output(f" Directory not found: {name}\n")
+                return
+            
+            if not os.path.isdir(target):
+                insert_output(f" Not a directory: {name}\n")
+                return
+            try:
+                contents = os.listdir(target)
+                if contents:
+                    insert_output(f" Directory not empty: {name} (contains {len(contents)} items)\n")
+                    return
+            except Exception as e:
+                insert_output(f" Error checking directory: {e}\n")
+                return
+            
+            try:
+                os.rmdir(target)
+                insert_output(f" Removed directory: {name}\n")
+            except OSError as e:
+                insert_output(f" Error: {e}\n")
+            except Exception as e:
+                insert_output(f" Error: {e}\n")
+            return
+
         elif user.startswith("rmrf "):
             if not ULTRA_MODE:
                 insert_output("  Error: Permission denied. Use 'ultra on' to enable\n", "error")
-                insert_output(show_user(), "green")
                 return
             
             name = user[5:].strip()
@@ -431,12 +460,11 @@ def start_gui():
                     insert_output(f"{pid:<8}{name:<25}{mem:<10}\n")
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     continue
-                return
+            return
 
         elif user.startswith('pkill '):
             if not ULTRA_MODE:
                 insert_output("  Error: Permission denied. Use 'ultra on' to enable\n", "error")
-                insert_output(show_user(), "green")
                 return
             
             import psutil
@@ -607,9 +635,10 @@ def start_gui():
             output.configure(state="normal")
             output.delete(1.0, ctk.END)
             output.configure(state="disabled")
-            insert_output("Lemon Terminal v1.5s1\n")
+            insert_output("Lemon Terminal v1.5s2b\n")
             insert_output("Type 'help' for categories of commands.\n")  
             insert_output("|To type, click on the input bar.\n\n", "gray_hint")
+            #insert_output(show_user(), "green")
             return
         elif user.startswith("echo "):
             text = user[5:]
@@ -695,7 +724,7 @@ def start_gui():
         else:
             insert_output("ERROR: such a command does not exist!\n", "error")
 
-        insert_output(show_user(), "green")
+        #insert_output(show_user(), "green")
 
     def focus_entry(event):
         entry.focus()
