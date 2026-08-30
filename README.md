@@ -48,7 +48,7 @@ The program is under active development, so your Linux system may display an "Un
 2. Check the box *"Allow executing file as program"*.
 
 
->[IMMORTAIT
+
 
 
 ---
