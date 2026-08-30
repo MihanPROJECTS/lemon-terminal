@@ -4,10 +4,16 @@
 # Lemon Terminal
 Lemon Terminal is a simple, straightforward terminal designed for those just starting to learn the command line. When I first started using a computer, I didn't understand how CMD and terminals worked. This project is my attempt to make the learning process easier and more engaging.
 
+>[!NOTE]
+>Translated using Google Translate; the text may contain errors.
+
 > **Разные языки / Other Languages:** [English](README.md) • [Русский](README.ru.md)
  
 ![Static Badge](https://img.shields.io/badge/Language-Python%203-yellow)
    ![Static Badge](https://img.shields.io/badge/Status-Beta%20Testing-orange)   ![Static Badge](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows-blue)   [![Static Badge](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
+>[!TIP]
+>As my studies are starting, updates for the terminal will be released less frequently, and there will be fewer major updates. I will release version 1.6 within the coming week, after which development will >slow down. I ask for your understanding. 🙂
 
 ![Lemon Terminal Demo](assets/newdemo.gif)
 
