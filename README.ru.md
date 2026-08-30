@@ -2,8 +2,6 @@
 
 # Лимон Терминал
 Lemon Terminal - это простой и понятный терминал, созданный для тех, кто только начинает изучать командную строку. Когда я впервые начал пользоваться компьютером, я не понимал, как работают CMD и терминалы. Данный проект - моя попытка сделать процесс обучения более простым и увлекательным.
-> [!IMPORTANT]
-> Начиная с версии 1.3 был добавлен новый метод отрисовки терминала с использованием CustomTkinter.
 
 >Разные языки / Other Languages: [English](README.md) • [Русский](README.ru.md)
 
@@ -11,6 +9,8 @@ Lemon Terminal - это простой и понятный терминал, с�
 ![Static Badge](https://img.shields.io/badge/Language-Python%203-yellow)
    ![Static Badge](https://img.shields.io/badge/Status-Beta%20Testing-orange)   ![Static Badge](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows-blue)   [![Static Badge](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
+>[!TIP]
+>В связи с началом учебы, обновления для терминала будут выходить реже, а крупных обновлений станет меньше. На следующей неделе я выпущу версию 1.6, после чего темпы разработки замедлятся. Надеюсь на ваше >понимание. 🙂
 
 
 
