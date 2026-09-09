@@ -1,4 +1,4 @@
-
+(FREEZE)
 <img width="192" height="192" alt="LemonTerminaljpg" src="https://github.com/user-attachments/assets/ece1d172-4ebb-4732-b428-e3970d13a730" />
 
 # Lemon Terminal
