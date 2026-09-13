@@ -37,11 +37,6 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 
 ---
 
->[!WARNING]
->### This is a beta version for testing!
-
-The program is under active development, so your Linux system may display an "Unknown file type" warning. This is normal for beta testing.
-
 **To launch the terminal:**
 1. Right-click the file -> *Properties* -> *Permissions*.
 2. Check the box *"Allow executing file as program"*.
@@ -73,6 +68,7 @@ You can use the following built-in commands to manage your system, files, and te
 * **`whoami`** - Outputs the current operating system username.
 * **`pslist`** - List of the top 40 resource-heavy active processes.
 * **`pkill <PID>`** - Terminates any system process directly from the console line.
+* **`env`** - Displays variables in your OS.
 
 ---
 
@@ -89,10 +85,19 @@ You can use the following built-in commands to manage your system, files, and te
 * **`fcount`** - Provides instant folder and file statistics for your current working directory.
 * **`fview <filename>`** - Opens and reads plain text files with clean, consecutive line numbering for easier debugging.
 * **`b64encode <text>`** - Inline text encoder that instantly converts strings into Base64 format.
+* **`zip <file.*`** - When archiving a file and specifying an extension, the file is archived to the program's root folder.
+* **`unzip <file.zip`** - Extract the file (specifying the .zip extension); it will be unpacked into the program's root folder..
 
 >[!CAUTION]
 >  **WARNING! DANGEROUS COMMAND!**
 > * **`rmdir`** / **`rfdir`** - Permanent and forced deletion of files or folders along with all their contents. Use with extreme caution; deleted data cannot be recovered!
+
+---
+
+###  NET
+* **`ip`** - Show the IP.
+* **`download <download link>`** - Downloads via the link to the terminal's root folder.
+* **`ping <website>`** - Check the website's status.
 
 ---
 
