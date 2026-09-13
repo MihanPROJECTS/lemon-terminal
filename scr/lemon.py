@@ -9,6 +9,9 @@ import getpass
 import shutil
 import subprocess
 import socket
+import zipfile
+import shutil
+
 ULTRA_MODE = False
 VARIABLES = {} #это нужно для будущих обновлений
 START_TIME = datetime.now()
@@ -34,11 +37,16 @@ custom_image_path = ""
 help_users = {
     "system": {
         "desc": "System commands",
-        "commands": ["sysinfo", "memory", "cpu", "disk", "ip", "systime", "pslist", "pkill", "whoami", ]
+        "commands": ["sysinfo", "memory", "cpu", "disk", "systime", "pslist", "pkill", "whoami", "env"]
     },
     "files": {
         "desc": "File management",
-        "commands": ["ls", "cd", "mkdir", "rmdir", "touch", "rmrf", "cat", "echo", "writefile", "pwd", "fcount", "fview", "b64encode"]
+        "commands": ["ls", "cd", "mkdir", "rmdir", "touch", "rmrf", "cat", "echo", "writefile", "pwd", "fcount", "fview", "b64encode", "zip", "unzip"]
+
+    },
+        "NET": {
+            "desc": "network commands",
+            "commands": ["ip", "download", "ping"]
     },
     "themes": {
         "desc": "Themes and customization",
@@ -96,7 +104,7 @@ def start_gui():
             output.insert("end", text)
         output.configure(state="disabled")
         output.see("end")
-    insert_output("Lemon Terminal v1.5s2b\n")
+    insert_output("Lemon Terminal v1.6r\n")
     insert_output("Type 'help' for categories of commands.\n") 
     insert_output("|To type, click on the input bar.\n\n", "gray_hint")
 
@@ -171,7 +179,7 @@ def start_gui():
     |_____|___|_|_|_|___|_|_|    |_| |___|_| |_|_|_|_|_|_|__,|_|
         
     - made by M1hail
-    - 40+ commands
+    - 50+ commands
     - theme support
     - run scripts
     - write 'help'
@@ -210,6 +218,61 @@ def start_gui():
             insert_output("  normal     - Classic black + blue input\n")
             insert_output("─" * 40 + "\n")
             return
+
+        elif user == "env":
+            import os
+            try:
+                for key, value in os.environ.items():
+                    insert_output(f"{key}={value}\n", "gray_hint")
+            except Exception as e:
+                insert_output(f"ERROR printing env: {e}\n", "red")
+            return
+
+        elif user.startswith("download "):
+            import urllib.request
+            url = user[9:].strip()
+            if not url.startswith(("http://", "https://")):
+                url = "http://" + url
+                
+            try:
+                filename = url.split("/")[-1].split("?")[0]
+                if not filename or "." not in filename:
+                    filename = "downloaded_file"
+                
+                insert_output(f"Downloading: {url}\n", "gray_hint")
+                insert_output(f"Saving as: {filename}...\n", "gray_hint")
+                req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (LemonTerminal)'})
+                
+                with urllib.request.urlopen(req, timeout=15) as response, open(filename, 'wb') as out_file:
+                    block_size = 8192
+                    while True:
+                        buffer = response.read(block_size)
+                        if not buffer:
+                            break
+                        out_file.write(buffer)
+                        
+                insert_output(f"SUCCESS: File '{filename}' downloaded successfully!\n", "green")
+            except Exception as e:
+                insert_output(f"ERROR downloading file: {e}\n", "red")
+            return
+
+
+        elif user.startswith("ping "):
+            import subprocess
+            host = user[5:].strip()
+            try:
+                result = subprocess.run(["ping", "-c", "3", host], capture_output=True, text=True, timeout=5)
+                if result.returncode == 0:
+                    insert_output(result.stdout, "gray_hint")
+                else:
+                    insert_output(f"ERROR: Host unreachable or {result.stderr}\n", "red")
+            except subprocess.TimeoutExpired:
+                insert_output("ERROR: Connection timed out.\n", "red")
+            except Exception as e:
+                insert_output(f"ERROR executing ping: {e}\n", "red")
+            return
+
+
             
         elif user.startswith("calc "):
             expression = user[5:].strip()
@@ -343,8 +406,61 @@ def start_gui():
             return
 
                 # Дальше идут команды файловые
+        elif user.startswith("zip "):
+            import os
+            import zipfile
+            import shutil
 
+            filename = user[4:].strip()
+            
+            if not os.path.exists(filename):
+                insert_output(f"ERROR: File or folder '{filename}' Not found.\n", "red")
+            else:
+                try:
+                    name, ext = os.path.splitext(filename)
+                    copy_name = f"{name}_copy{ext}"
+                    zip_name = f"{name}.zip"
+                    
+                    if os.path.isdir(filename):
+                        shutil.copytree(filename, copy_name)
+                        shutil.make_archive(name, 'zip', copy_name)
+                        shutil.rmtree(copy_name)
+                    else:
+                        shutil.copy2(filename, copy_name)
+                        with zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                            zipf.write(copy_name, arcname=filename)
+                        os.remove(copy_name)
+                        
+                    insert_output(f"Successfully: Archive created '{zip_name}' from a copy of the file..\n", "green")
+                except Exception as e:
+                    insert_output(f"Archiving error: {e}\n", "red")
+            return
+
+        elif user.startswith("unzip "):
+            import os
+            import zipfile
+            import shutil
+
+            zip_name = user[6:].strip()
+            
+            if not os.path.exists(zip_name):
+                insert_output(f"ERROR: Archive '{zip_name}' not found.\n", "red")
+            elif not zip_name.lower().endswith(".zip"):
+                insert_output("ERROR: Specify a file with the extension .zip\n", "red")
+            else:
+                try:
+                    extract_dir = zip_name[:-4] + ""
+                    
+                    with zipfile.ZipFile(zip_name, 'r') as zipf:
+                        zipf.extractall(extract_dir)
+                        
+                    insert_output(f"Success: Archive extracted to folder '{extract_dir}'.\n", "green")
+                except Exception as e:
+                    insert_output(f"ERROR during extraction: {e}\n", "red")
+            return
+        
         elif user == "ls":
+            import os
             try:
                 files = os.listdir(".")
                 insert_output(" Files:\n")
@@ -487,7 +603,7 @@ def start_gui():
                 insert_output("Error: Please specify a valid numeric PID (e.g., pkill 1234).\n", "error")
                 return
 
-        elif user.startswith('b64encode '): #эта команда на будущее, она работает, но другая команда, которая декодирует и вызывает ошибки, была удалена. Можете пользоваться, но декодирование будет в будущем обновлении. :)
+        elif user.startswith('b64encode '): #Команду для декодирования добавлю в будущем. Еще посидим без комады. P.S мне просто лень доделыввать алгоритм декодирования.
             import base64
             text_str = user[10:]
             if text_str:
@@ -635,7 +751,7 @@ def start_gui():
             output.configure(state="normal")
             output.delete(1.0, ctk.END)
             output.configure(state="disabled")
-            insert_output("Lemon Terminal v1.5s2b\n")
+            insert_output("Lemon Terminal v1.6r\n")
             insert_output("Type 'help' for categories of commands.\n")  
             insert_output("|To type, click on the input bar.\n\n", "gray_hint")
             #insert_output(show_user(), "green")
