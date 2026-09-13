@@ -37,16 +37,6 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 
 ---
 
-**To launch the terminal:**
-1. Right-click the file -> *Properties* -> *Permissions*.
-2. Check the box *"Allow executing file as program"*.
-
-
-
-
-
----
-
 ##  Launch
 
 Open the file. Type `help` for a list of commands.
