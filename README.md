@@ -14,7 +14,7 @@ Lemon Terminal is a simple, straightforward terminal designed for those just sta
 >[!TIP]
 >As my studies are starting, updates for the terminal will be released less frequently, and there will be fewer major updates. I will release version 1.6 within the coming week, after which development will >slow down. I ask for your understanding. 🙂
 
-![Lemon Terminal Demo](assets/newdemo.gif)
+![Lemon Terminal Demo](assets/screenshot.png)
 
 
 
