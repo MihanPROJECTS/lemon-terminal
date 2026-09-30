@@ -12,12 +12,16 @@ import socket
 import zipfile
 import shutil
 
+
+active_process = None
+is_interactive = False
+
 ULTRA_MODE = False
 VARIABLES = {} #это нужно для будущих обновлений
 START_TIME = datetime.now()
 
 #if not ULTRA_MODE:
-#            insert_output("  Error: Permission denied. Use 'ultra on' to enable\n", "error")       #Данный шаблон на будущее чтобы удобней проверять в команде привилегии пользователя.
+#            insert_output("  Error: Permission denied. Use 'ultra on' to enable\n", "error")       # шаблон на будущее чтобы удобней проверять в команде привилегии пользователя.
 #            insert_output(show_user(), "green")
 #            return
 
@@ -81,10 +85,10 @@ def start_gui():
         corner_radius=1,        
         fg_color="#1a1a1a"       
     )
-    output.pack(fill="both", expand=True, padx=10, pady=10)
+    output.pack(fill="both", expand=True, padx=1, pady=1)
     output.configure(state="disabled")
 
-    #цвета
+    #цвета.
     output.tag_config("green", foreground="#73d65a")
     output.tag_config("gray_hint", foreground="#757575")
     output.tag_config("error", foreground="#ff4444")
@@ -104,7 +108,7 @@ def start_gui():
             output.insert("end", text)
         output.configure(state="disabled")
         output.see("end")
-    insert_output("Lemon Terminal v1.6r\n")
+    insert_output("Lemon Terminal v1.6s1b\n")
     insert_output("Type 'help' for categories of commands.\n") 
     insert_output("|To type, click on the input bar.\n\n", "gray_hint")
 
@@ -112,14 +116,14 @@ def start_gui():
         window, 
         placeholder_text="Enter the command...", 
         font=("Consolas", 13),
-        height=25,
+        height=27,
         corner_radius=0,
         
         fg_color="#FFE600",     
         text_color="black",    
         border_color="#FFE600"  
     )
-    entry.pack(fill="x", padx=10, pady=(0, 10))
+    entry.pack(fill="x", padx=0, pady=(0, 0))
     entry.focus()
 
     entry.bind("<Enter>", lambda e: entry.configure(border_color="#F0F0F0")) 
@@ -136,11 +140,12 @@ def start_gui():
             window.after(300, rgb_plus_fps)
 
 
-    entry.bind("<Return>", lambda event: handle_user(event))
+    entry.bind("<Return>", lambda event: handle_user(event)) # Наброски
 
     def handle_user(event):
         nonlocal rgb_active
         user = entry.get().strip()
+        global is_interactive  
         
         if user:
             if not hasattr(window, 'history'):
@@ -152,13 +157,30 @@ def start_gui():
 
             window.history_index = -1
             
-        user = user.lower() 
+        user = user
         entry.delete(0, "end")    
 
         if not user:
             return
+            
+        if is_interactive:
+            insert_output(user + "\n")
+            
+            if user.lower() == "y":
+                insert_output("➔ ДАДА\n", "green")
+            elif user.lower() == "n":
+                insert_output("➔ НЕНЕ\n", "error")
+            else:
+                insert_output("Enter y or n: ")
+                return
+                
+            is_interactive = False
+            return
         insert_output(show_user(), "green")
         insert_output(user + "\n")
+        if user.lower() == "help":
+            insert_output(" HELP - Available categories:\n")
+
 
         if user == "help":
             # Категории хэлп
@@ -188,25 +210,50 @@ def start_gui():
             insert_output(ver_text)
             return
 
-        elif user.startswith("run "):
+        elif user.lower().startswith("run "): #ПЕРЕДЕЛАНА, теперь она реально переваривает sudo, раньше писала ошибку.  wefwoufheifhiougheugebuigbeigbeigbeibgeibgiebgibegibegbgebgebgbe
             cmd = user[4:].strip()
+            if cmd.lower().startswith("sudo "):
+                cmd = "sudo " + cmd[5:]
             try:
                 import subprocess
-                process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-                stdout, stderr = process.communicate()
-                if stdout:
-                    insert_output(stdout)
+                
+                # Создаем процесс
+                process = subprocess.Popen(
+                    cmd,
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    bufsize=1 # Построчная буферизация
+                )
+                
+                while True:
+                    stdout_line = process.stdout.readline()
+                    if stdout_line:
+                        insert_output(stdout_line)
+                        window.update_idletasks()
+        
+                    if not stdout_line and process.poll() is not None:
+                        break
+                
+                stderr = process.stderr.read()
                 if stderr:
-                    insert_output("⚠️ " + stderr)
+                    insert_output("⚠ " + stderr + "\n", "error")
+                    
                 if process.returncode != 0:
-                    insert_output(f" command failed (exit code: {process.returncode})\n")
+                    insert_output(f" command failed (exit code: {process.returncode})\n", "error")
                 else:
-                    insert_output(f" command finished (exit code: {process.returncode})\n")
-            except FileNotFoundError:
-                insert_output(f" command not found: {cmd}\n")
+                    insert_output(f" command finished (exit code: {process.returncode})\n", "green")
+                    
             except Exception as e:
-                insert_output(f" Error: {e}\n")
+                insert_output(f" Error: {e}\n", "error")
             return
+
+        elif user == "test":
+            insert_output("Do you want to continue? (y/n): ")
+            is_interactive = True  # Просто взводим курок!
+            return
+
         elif user == "date":
             insert_output(datetime.now().strftime("%d %B %Y") + "\n")
             return
@@ -263,7 +310,7 @@ def start_gui():
             try:
                 result = subprocess.run(["ping", "-c", "3", host], capture_output=True, text=True, timeout=5)
                 if result.returncode == 0:
-                    insert_output(result.stdout, "gray_hint")
+                    insert_output(result.stdout, "white")
                 else:
                     insert_output(f"ERROR: Host unreachable or {result.stderr}\n", "red")
             except subprocess.TimeoutExpired:
@@ -314,6 +361,7 @@ def start_gui():
             if hasattr(window, 'history') and window.history:
                 for i, cmd in enumerate(window.history, 1):
                     insert_output(f"  {i}  {cmd}\n")
+                return
             else:
                 insert_output("  History is empty.\n")
                 return
@@ -751,7 +799,7 @@ def start_gui():
             output.configure(state="normal")
             output.delete(1.0, ctk.END)
             output.configure(state="disabled")
-            insert_output("Lemon Terminal v1.6r\n")
+            insert_output("Lemon Terminal v1.6s1b\n")
             insert_output("Type 'help' for categories of commands.\n")  
             insert_output("|To type, click on the input bar.\n\n", "gray_hint")
             #insert_output(show_user(), "green")
@@ -879,6 +927,8 @@ def start_gui():
     entry.focus()
     
     window.mainloop()
+
+#«Если жизнь одаривает тебя лимонами, не делай лимонад! Заставь жизнь забрать их обратно!»
 
 if __name__ == "__main__":
     start_gui()
