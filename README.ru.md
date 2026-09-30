@@ -18,7 +18,7 @@ Lemon Terminal - это простой и понятный терминал, с�
 
 
 
-![Lemon Terminal Demo](assets/newdemo.gif)
+![Lemon Terminal Demo](assets/screenshot.png)
 
 
 
