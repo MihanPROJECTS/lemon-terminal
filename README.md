@@ -1,6 +1,6 @@
-<img width="192" height="192" alt="LemonTerminaljpg" src="https://github.com/user-attachments/assets/ece1d172-4ebb-4732-b428-e3970d13a730" />
+<img width="220" height="220" alt="lemon-terminal.png" src="assets/lemon-terminal.png" />
 
-# Lemon Terminal (Release)
+# Lemon Terminal
 Lemon Terminal is a simple, straightforward terminal designed for those just starting to learn the command line. When I first started using a computer, I didn't understand how CMD and terminals worked. This project is my attempt to make the learning process easier and more engaging.
 
 >[!NOTE]
